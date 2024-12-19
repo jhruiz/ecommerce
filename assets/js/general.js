@@ -1,5 +1,12 @@
-var urlC = 'http://localhost:85/cotoolsback/public/';
+var urlC = 'http://localhost:85/ecommerce_back/public/';
 var urlEC = 'http://localhost:85/ecommerce/';
+var urlImg = 'http://localhost:85/ecommerce_admin/dist/img/';
+var urlGuide = 'http://localhost:85/ecommerce_admin/docs/assets/guides/';
+var valDefecto = 'precio1';
+var ivaIncDefecto = 'ivaincp1';
+var pagActual = "1";
+var cantItems = 20;
+var cantidadItems = 0;
 
 var mostrarTexto1Banner = function() {
     var spanWidth = $('#text_1_banner span').width();
@@ -40,7 +47,6 @@ var obtenerItems = function() {
             url: urlC + "pedido/cantidaditems",
             data: { userId : userId },
             success: function(respuesta) {
-                console.log({respuesta});
                 if(respuesta.estado) {
                     $('#cntItems').html(respuesta.data.length);
                 }                
@@ -98,7 +104,8 @@ var goToShopping = function() {
     }
 }
 
-$( document ).ready(function() {   
+$( document ).ready(function() { 
+      
     setTimeout(function(){ 
         mostrarTexto1Banner();
         mostrarTexto2Banner();

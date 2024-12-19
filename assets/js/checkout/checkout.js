@@ -1,10 +1,3 @@
-// var urlImg = 'https://admin.cotools.co/dist/img/';
-// var urlC = 'https://cotoolsback.cotools.co/public/';
-// var urlD = 'https://dataxback.cotools.co/public/';
-var urlImg = 'http://localhost:85/cotoolsadmfront/dist/img/';
-// var urlC = 'http://localhost:85/cotoolsback/public/';
-var urlD = 'http://localhost:85/dataxback/';
-
 /**
  * Modifica la cantidad solicitada de un item específico
  * @param {*} data 
@@ -344,6 +337,7 @@ var actualizarPedidoWeb = function() {
             } else {
                 bootbox.alert('Se presento un error. Por favor, inténtelo nuevamente.');
             }
+            hideLoader();
             
         },
         error: function() {
@@ -358,6 +352,8 @@ var actualizarPedidoWeb = function() {
  */
 function confirmarPedido() {
     $(".btn-confirm").prop('disabled', true);
+
+    showLoader();
 
     //se obtiene la información del cliente para validar el pedido
     var userId = localStorage.getItem('id');    
@@ -378,6 +374,7 @@ function confirmarPedido() {
             
         },
         error: function() {
+            hideLoader();
             bootbox.alert('Se produjo un error. Por favor, inténtelo nuevamente.');
         }
     });

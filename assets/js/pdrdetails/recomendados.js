@@ -1,10 +1,3 @@
-// var urlImg = 'https://admin.cotools.co/dist/img/';
-// var urlC = 'https://cotoolsback.cotools.co/public/';
-var urlImg = 'http://localhost:85/cotoolsadmfront/dist/img/';
-// var urlC = 'http://localhost:85/cotoolsback/public/';
-var valDefecto = 'precio1';
-var ivaIncDefecto = 'ivaincp1';
-
 /**
  * Valida que el campo sea numérico
  */

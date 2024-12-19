@@ -71,17 +71,45 @@ var actualizarDataCliente = function() {
  * Crear el dropdown de ciudades
  */
 var crearListaCiudades = function(data, ciudad_id) {
-    var htmlCities = '<option value="">Ciudades*</option>';
+    var htmlCities = '<option value="">CIUDADES*</option>';
 
-    data.forEach( element => {
-        htmlCities += '<option value="' + element.id + '">' + element.descripcion + '</option>';
-    });
+    if(data != null){
+        data.forEach( element => {
+            htmlCities += '<option value="' + element.id + '">' + element.descripcion + '</option>';
+        });
+    }
 
     $('#cities').html(htmlCities);
 
     // Si llega la ciudad por parametro, la preselecciona
     if(ciudad_id != null) {
         $('#cities').val(ciudad_id);
+    }
+}
+
+/**
+ * Obtiene los departamentos por pais
+ */
+var obtenerDepartamentosXPais = function() {
+    paisId = $('#countries').val();    
+        
+    if(paisId != "") {
+        $.ajax({
+            method: "GET",
+            url: urlC + "departamentos/obtener",
+            data: { paisId : paisId },
+            success: function(respuesta) {
+                if(respuesta.estado) {
+                    crearListaDptos(respuesta.data, null);
+                    crearListaCiudades(null, null)
+                }                
+            },
+            error: function() {
+                console.log('Error al obtener los departamentos');
+            }
+        }); 
+    } else {
+        console.log('Debe seleccionar un pais');
     }
 }
 
@@ -117,7 +145,7 @@ var obtenerCiudades = function(dptoId = null, ciudad_id = null) {
  * @param {*} data 
  */
 var crearListaDptos = function(data, dpto_id) {
-    var htmlDptos = '<option value="">Departamentos*</option>';
+    var htmlDptos = '<option value="">DEPARTAMENTOS*</option>';
 
     data.forEach( element => {
         htmlDptos += '<option value="' + element.id + '">' + element.descripcion + '</option>';
@@ -130,10 +158,11 @@ var crearListaDptos = function(data, dpto_id) {
 /**
  * Obtiene el listado de departamentos
  */
-var obtenerDepartamentos = function(dpto_id) {
+var obtenerDepartamentos = function(dpto_id, paisId) {
     $.ajax({
         method: "GET",
         url: urlC + "departamentos/obtener",
+        data: { paisId : paisId },
         success: function(respuesta) {
             if(respuesta.estado) {
                 crearListaDptos(respuesta.data, dpto_id);
@@ -146,12 +175,47 @@ var obtenerDepartamentos = function(dpto_id) {
 }
 
 /**
+ * Se crea la lista de paises con la información obtenida por ajax
+ * @param {*} data 
+ */
+var crearListaPaises = function(data, pais_id) {
+    var htmlPaises = '<option value="">PAISES*</option>';
+
+    data.forEach( element => {
+        htmlPaises += '<option value="' + element.id + '">' + element.descripcion + '</option>';
+    });
+
+    $('#countries').html(htmlPaises); 
+    $('#countries').val(pais_id);    
+}
+
+/**
+ * Obtiene el listado de paises
+ * @param {*} pais_id 
+ */
+var obtenerPaises = function(pais_id) {
+    $.ajax({
+        method: "GET",
+        url: urlC + "paises/obtener",
+        success: function(respuesta) {
+            if(respuesta.estado) {
+                crearListaPaises(respuesta.data, pais_id);
+            }                
+        },
+        error: function() {
+            console.log('Error al obtener los departamentos');
+        }
+    });
+}
+
+/**
  * Diligencia la información del cliente
  * @param {*} data 
  */
 var generarFormularioCliente = function(data) {
 
-    obtenerDepartamentos(data['0'].departamento);
+    obtenerPaises(data['0'].pais);
+    obtenerDepartamentos(data['0'].departamento, data['0'].pais);
     obtenerCiudades(data['0'].departamento, data['0'].ciudad_id);    
 
     $('#name').val(data['0'].primer_nombre + ' ' + data['0'].segundo_nombre);

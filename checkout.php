@@ -21,10 +21,16 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/owl.css">
     <link rel="stylesheet" href="assets/css/whatsapp/whatsapp.css">
+    <link rel="stylesheet" href="assets/css/checkout/checkout-loader.css">
 
   </head>
 
   <body>
+
+    <div id="loader" class="loader-overlay">
+        <div class="loader"></div>
+        <div class="loader-message">Estamos procesando tu pedido...</div>
+    </div>
 
     <!-- ***** Preloader Start ***** -->
     <div id="preloader">
@@ -175,54 +181,69 @@
                   <div class="row" id="form-suscription">
 
                     <div class="row col-lg-12 col-md-12 col-sm-12">
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Nombres</label>
                           <input name="name" type="text" class="form-control" id="name" readonly>
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Apellidos</label>
                           <input name="lastnames" type="text" class="form-control" id="lastnames" readonly>
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Identificación</label>
                           <input name="identification" type="text" class="form-control" id="identification" readonly>
                         </fieldset>
                       </div>
                     </div>
 
                     <div class="row col-lg-12 col-md-12 col-sm-12">
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
-                          <input name="email" type="text" class="form-control" id="email">
+                         <label>Pais</label>
+                          <select name="countries" class="form-control" id="countries" onchange="obtenerDepartamentosXPais()"></select>
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                         <label>Departamento</label>
                           <select name="dptos" class="form-control" id="dptos" onchange="obtenerCiudades(null, null)"></select>
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Ciudad</label>
                           <select name="cities" class="form-control" id="cities" ></select>
                         </fieldset>
                       </div>
                     </div>
 
                     <div class="row col-lg-12 col-md-12 col-sm-12">
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Correo</label>
+                          <input name="email" type="text" class="form-control" id="email">
+                        </fieldset>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <fieldset>
+                          <label>Dirección</label>
                           <input name="direction" type="text" class="form-control" id="direction">
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Teléfono</label>
                           <input name="telephone" type="text" class="form-control" id="telephone">
                         </fieldset>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="col-lg-3 col-md-3 col-sm-3">
                         <fieldset>
+                          <label>Celular</label>
                           <input name="cellphone" type="text" class="form-control" id="cellphone">
                         </fieldset>
                       </div>
@@ -271,6 +292,7 @@
     <script src="assets/js/generalcategorias.js"></script>
     <script src="assets/js/checkout/checkout.js"></script>
     <script src="assets/js/checkout/updateuser.js"></script>    
+    <script src="assets/js/checkout/loader.js"></script>    
 
   </body> 
 

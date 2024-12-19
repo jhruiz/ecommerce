@@ -1,11 +1,3 @@
-// var urlC = 'https://cotoolsback.cotools.co/public/';
-// var urlC = 'http://localhost:85/cotoolsback/public/';
-
-function suscribirse() {
-    //window.open('https://admin.cotools.co/pages/usuarios/externos.html', '_blank');
-    window.open('http://localhost:85/cotoolsadmfront/pages/usuarios/externos.html', '_blank');
-}
-
 /**
  * Funcion logout
  */

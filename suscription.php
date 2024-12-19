@@ -20,10 +20,16 @@
     <link rel="stylesheet" href="assets/css/fontawesome.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/owl.css">
+    <link rel="stylesheet" href="assets/css/checkout/checkout-loader.css">
 
   </head>
 
   <body>
+
+    <div id="loader" class="loader-overlay">
+        <div class="loader"></div>
+        <div class="loader-message">Estamos creando tu usuario...</div>
+    </div>
 
     <!-- ***** Preloader Start ***** -->
     <div id="preloader">
@@ -89,35 +95,40 @@
                 <div class="row" id="form-suscription">
 
                   <div class="row col-lg-12 col-md-12 col-sm-12">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="name" type="text" class="form-control" id="name" placeholder="Nombres*" autocomplete="off">
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="lastnames" type="text" class="form-control" id="lastnames" placeholder="Apellidos*" autocomplete="off">
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="identification" type="text" class="form-control" id="identification" placeholder="Identificación*" autocomplete="off">
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <fieldset>
+                        <input name="email" type="text" class="form-control" id="email" placeholder="E-Mail*" autocomplete="off">
                       </fieldset>
                     </div>
                   </div>
 
                   <div class="row col-lg-12 col-md-12 col-sm-12">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
-                        <input name="email" type="text" class="form-control" id="email" placeholder="E-Mail*" autocomplete="off">
+                        <select name="countries" class="form-control" id="countries" placeholder="Paises*" ></select>
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <select name="dptos" class="form-control" id="dptos" placeholder="Departamentos*" ></select>
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <select name="cities" class="form-control" id="cities" placeholder="Ciudades*"></select>
                       </fieldset>
@@ -125,17 +136,17 @@
                   </div>
 
                   <div class="row col-lg-12 col-md-12 col-sm-12">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="direction" type="text" class="form-control" id="direction" placeholder="Dirección*" autocomplete="off">
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="telephone" type="text" class="form-control" id="telephone" placeholder="Teléfono*" autocomplete="off">
                       </fieldset>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
                       <fieldset>
                         <input name="cellphone" type="text" class="form-control" id="cellphone" placeholder="Celular*" autocomplete="off">
                       </fieldset>
@@ -185,6 +196,7 @@
     <script src="assets/js/general.js"></script>
     <script src="assets/js/generalcategorias.js"></script>
     <script src="assets/js/suscription/suscription.js"></script>
+    <script src="assets/js/checkout/loader.js"></script>
   </body>
 
 </html>
