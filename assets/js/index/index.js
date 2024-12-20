@@ -257,7 +257,7 @@ var generarVistaImagenes = function(data) {
         listPdrHtml += valNoList + '<h6><strong class="text-primary">' + valPdr + '</strong></h6>';
         listPdrHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';
         listPdrHtml += '</div>';        
-        listPdrHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarrito(this)"></i></div>';
+        listPdrHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" style="cursor: pointer;" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarrito(this)"></i></div>';
         listPdrHtml += '</div>';
         listPdrHtml += '</div>';
     });

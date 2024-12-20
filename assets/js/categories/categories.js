@@ -245,7 +245,7 @@ var leaveCar = function(data) {
         listPdrHtml += valNoList + '<h6>' + valPdr + '</h6>';
         listPdrHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';        
         listPdrHtml += '</div>';
-        listPdrHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarrito(this)"></i></div>';
+        listPdrHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" style="cursor: pointer;" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarrito(this)"></i></div>';
         listPdrHtml += '</div>';
         listPdrHtml += '</div>';
     });
@@ -358,7 +358,7 @@ var crearListaCategorias = function(data) {
     var htmlCat = "";
 
     data.forEach( element => {
-        htmlCat += '<button type="button" id="cat_' + element.id + '" class="list-group-item list-group-item-action" onclick="obtenerGruposCategoria(this)"><p><i class="fa fa-angle-double-right"></i> ' + element.descripcion + '</p></button>';
+        htmlCat += '<button type="button" id="cat_' + element.id + '" class="list-group-item list-group-item-action" onclick="obtenerGruposCategoria(this)" style="cursor: pointer;"><p><i class="fa fa-angle-double-right"></i> ' + element.descripcion + '</p></button>';
     });
 
     $('#listaCat').html(htmlCat);
