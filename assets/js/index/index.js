@@ -265,8 +265,6 @@ var generarVistaImagenes = function(data) {
         listPdrHtml += '<button type="button" class="btn btn-primary btn-sm btn-block">Primary</button>';
         listPdrHtml += '<button type="button" class="btn btn-secondary btn-sm btn-block">Secondary</button>';
 
-
-
         listPdrHtml += '</div>';
         listPdrHtml += '</div>';
         listPdrHtml += '</div>';

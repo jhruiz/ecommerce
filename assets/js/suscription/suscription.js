@@ -17,6 +17,7 @@ var crearListaCiudades = function(data) {
  * Obtienen las ciudades desde la base de datos
  */
 var obtenerCiudades = function() {
+    crearListaCiudades(null);
     var dptoId = $("#dptos option:selected").val();
 
     if(dptoId != "") {
@@ -46,9 +47,11 @@ var obtenerCiudades = function() {
 var crearListaDptos = function(data) {
     var htmlDptos = '<option value="">DEPARTAMENTOS*</option>';
 
-    data.forEach( element => {
-        htmlDptos += '<option value="' + element.id + '">' + element.descripcion + '</option>';
-    });
+    if(data != null){
+        data.forEach( element => {
+            htmlDptos += '<option value="' + element.id + '">' + element.descripcion + '</option>';
+        });
+    }
 
     $('#dptos').html(htmlDptos); 
     $('#dptos').change(obtenerCiudades);      
@@ -67,6 +70,7 @@ var obtenerDepartamentos = function() {
         url: urlC + "departamentos/obtener",
         data: { paisId : paisId },
         success: function(respuesta) {
+
             if(respuesta.estado) {
                 crearListaDptos(respuesta.data);
                 crearListaCiudades(null);
@@ -194,6 +198,7 @@ $( document ).ready(function() {
     obtenerPaises(); 
     
     // Se setean los select con datos genericos
+    $('#countries').html('<option value="">PAISES*</option>'); 
     $('#dptos').html('<option value="">DEPARTAMENTOS*</option>'); 
     $('#cities').html('<option value="">CIUDADES*</option>'); 
 });
