@@ -268,10 +268,10 @@ var agregarInformacionItemPpal = function(detalles) {
 }
 
 // Agrega o quita el resaltado del carrito de ventas
-var overCar = function(data) {
+var overIcon = function(data) {
     $('#' + data.id).removeClass('text-secondary');
 }
-var leaveCar = function(data) {
+var leaveIcon = function(data) {
     $('#' + data.id).addClass('text-secondary');
 }
 
@@ -327,7 +327,7 @@ var agregarItemsPorGrupo = function(grupo) {
         gruposHtml += valNoList + '<h6>' + valPdr + '</h6>';
         gruposHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';
         gruposHtml += '</div>';
-        gruposHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarritoDesdeGrupo(this)"></i></div>';
+        gruposHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveIcon(this)" onmouseover="overIcon(this)" onclick="agregarAlCarritoDesdeGrupo(this)"></i></div>';
         gruposHtml += '</div>';
         gruposHtml += '</div>';
     })

@@ -203,10 +203,10 @@ function agregarAlCarrito(data) {
 
 
 // Agrega o quita el resaltado del carrito de ventas
-var overCar = function(data) {
+var overIcon = function(data) {
     $('#' + data.id).removeClass('text-secondary');
 }
-var leaveCar = function(data) {
+var leaveIcon = function(data) {
     $('#' + data.id).addClass('text-secondary');
 }
 
@@ -257,7 +257,17 @@ var generarVistaImagenes = function(data) {
         listPdrHtml += valNoList + '<h6><strong class="text-primary">' + valPdr + '</strong></h6>';
         listPdrHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';
         listPdrHtml += '</div>';        
-        listPdrHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarrito(this)"></i></div>';
+        listPdrHtml += '<div class="text-right" style="margin:10px;">';
+        listPdrHtml += '<i class="fa fa fa-whatsapp fa-lg text-secondary" style="margin-left:5px;" id="wspshare_' + element.item_id + '" title="Comprar por Whatsapp" onmouseleave="leaveIcon(this)" onmouseover="overIcon(this)" onclick="agregarAlCarrito(this)"></i>';
+        listPdrHtml += '<i class="fa fa-shopping-cart fa-lg text-secondary" style="margin-left:5px;" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveIcon(this)" onmouseover="overIcon(this)" onclick="agregarAlCarrito(this)"></i>';
+
+
+        listPdrHtml += '<button type="button" class="btn btn-primary btn-sm btn-block">Primary</button>';
+        listPdrHtml += '<button type="button" class="btn btn-secondary btn-sm btn-block">Secondary</button>';
+
+
+
+        listPdrHtml += '</div>';
         listPdrHtml += '</div>';
         listPdrHtml += '</div>';
     });

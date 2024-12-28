@@ -89,11 +89,6 @@
     </div>
     <!-- Banner Ends Here -->
 
-
-
-
-
-
     <div class="products">
       <div class="container">
         <div class="row" id="prods_availables">
