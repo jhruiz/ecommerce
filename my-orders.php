@@ -17,8 +17,6 @@
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" href="assets/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/owl.css">
     <link rel="stylesheet" href="assets/css/my-orders/my-orders.css">
     <link rel="stylesheet" href="assets/css/whatsapp/whatsapp.css">
 
@@ -140,7 +138,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="inner-content">
-               <p>Copyright © 2023 Torque Racing S.A.S</p>
+               <p>Copyright © <?php echo date('Y')?> Miggo Solutions S.A</p>
             </div>
           </div>
         </div>
@@ -161,10 +159,7 @@
 
 
     <!-- Additional Scripts -->
-    <script src="assets/js/custom.js"></script>
-    <script src="assets/js/owl.js"></script>
     <script src="assets/js/general.js"></script>
-    <script src="assets/js/vallogin.js"></script>
     <script src="assets/js/generalcategorias.js"></script>
     <script src="assets/js/orders/my_orders.js"></script>
   </body>

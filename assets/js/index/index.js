@@ -1,73 +1,21 @@
+// Iconos SVG para Anterior/Siguiente (para que no dependas de FontAwesome)
+var iconArrowLeft = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>`;
+var iconArrowRight = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+
+
 /**
  * Redirecciona a la pagina de detalles del producto y guarda en sesion el id de producto
+ * En uso
  * @param {*} id 
  */
-var redirectItemDetail = function(data) {
-
-    sessionStorage.setItem('idProd', $(data).data('idprod'));
-    window.location.href = urlEC + "product-details.php";
-}
-
-/**
- * Valida el tamaño de la descripcion del producto y formatea un tamaño estandar
- * @param {*} descripcion 
- * @returns 
- */
-var obtenerNombreProducto = function(descripcion, limite) {
-    var nDescripcion = "";
-    
-    if(descripcion != '') {
-        if( descripcion.length > limite ) {
-            nDescripcion = descripcion.substring(0,limite) + "...";
-        } else {
-            nDescripcion = descripcion;
-        }
-    }
-
-    return nDescripcion;
-}
-
-/**
- * Valida si el producto tiene una imagen o agrega una por defecto
- * @param {*} imagen 
- * @returns 
- */
-var obtenerImagenProducto = function(item_id, imgItems) {
-    var img = "";
-    if( typeof(imgItems[item_id]) == "undefined" ){
-        img = 'assets/images/empty.jpg'
-    } else {
-        img = urlImg + imgItems[item_id];
-    }    
-
-    return img;
-}
-
-/**
- * Obtiene el precio del producto en la lista 3
- * @returns 
- */
-var precioProductoLista = function(precio) {
-    var valorProducto = "";
-
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-      });
-
-    if (precio != "" ) {
-        valorProducto = '<del>' + formatter.format(precio).toString() + '</del>';
-    } else {
-        valorProducto = '$0'
-    }
-
-    return valorProducto;    
+var redirectItemDetail = function(idProd) {
+    window.location.href = urlEC + "product-details.php?id=" + idProd;
 }
 
 /**
  * Obtiene y formatea el precio del producto a pesos.
  * Valida si el iva se encuentra incluido o no
+ * En uso
  * @param {*} precio 
  * @param {*} ivaInc 
  * @returns 
@@ -92,192 +40,76 @@ var  obtenerPrecioProducto = function(precio, ivaInc) {
 }
 
 /**
- * Valida que el campo sea numérico
- */
-function validarNumeros() {
-    valor = $('#uniFactor').val();
-    if( isNaN(valor) ) {
-        $('#uniFactor').val($('#uniFactorHid').val());
-    }
-}
-
-/**
- * Si el campo cantidad se deja vacio o se pone en cero, se agrega 
- * la unidad de factor por defecto configurada en datax
- */
-function restaurarUniFactor() {
-    var uniFactor = $('#uniFactor').val();
-
-    if( uniFactor == "" || uniFactor == 0 ) {
-        $('#uniFactor').val($('#uniFactorHid').val());
-    }
-
-}
-
-/**
- * Genera la información de la vista del modal del carrito de compras
- * @param {*} data 
- */
-var generarVistaDetalleItem = function( data, imgItems ) {
-
-    // Valida el precio del producto basado en la lista a la cual pertenece el cliente
-    var valNoList = '';
-    if(localStorage.getItem('id') != null ) {
-
-        var listaPrecio = 'precio' + localStorage.getItem('lista_benf');
-        var valIvaInc = 'ivaincp' + localStorage.getItem('lista_benf');
-        var valor = data['0'][listaPrecio];
-        var ivaInc = data['0'][valIvaInc];            
-
-        if( valDefecto != listaPrecio) {
-            valNoList = precioProductoLista(data['0'].precio1);
-        }
-
-    } else {
-        var valor = data['0'][valDefecto];
-        var ivaInc = data['0'][ivaIncDefecto];
-    }  
-
-    var img = obtenerImagenProducto(data['0'].item_id ,imgItems);
-
-    $('#formAgregarItemLabel').html( data['0'].descripcion );
-    $('#itmCodigo').html('Código ' + data['0'].codigo);
-    $('#referencia').html('Referencia ' + data['0'].referencia);
-    $('#unidadFactor').html('Unidades por empaque ' + data['0'].unidad_factor);
-    $('#uniFactorHid').val(data['0'].unidad_factor);
-    $('#descHid').val(data['0'].descripcion + '<br> Ref. ' + data['0'].referencia);
-    $('#uniFactor').val(data['0'].unidad_factor);
-    $('#codHid').val(data['0'].codigo);
-    if(valNoList != "") {
-        $('#delPrice').html(valNoList);
-    }        
-    $('#precioPpal').html(obtenerPrecioProducto(valor, ivaInc));
-    var detailHtml = '<img src="' + img + '" width="180" height="200"/>';
-    $('#ppal_image').html(detailHtml);    
-} 
-
-/**
- * Genera una vista previa del modal de agregar un producto al carrito
- */
-var generarVistaModal = function(id) {
-    $('#formAgregarItemLabel').html($('#title_' + id).val());
-    $('#itmCodigo').html('Código');
-    $('#referencia').html('Referencia ');
-    $('#unidadFactor').html('Unidades por empaque');
-    $('#uniFactorHid').val('');
-    $('#descHid').val('');
-    $('#uniFactor').val('');
-    $('#codHid').val('');
-    $('#delPrice').html('');
-    $('#precioPpal').html('');    
-    var detailHtml = '<div class="cont_img_ppal"><img src="assets/images/empty.jpg" width="180" height="200"/>';
-    detailHtml += '<div class="centrado"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></div></div>'
-    $('#ppal_image').html(detailHtml);       
-    $('#formAgregarItem').modal('toggle'); 
-}
-
-/**
- * Desplegar modal para agregar producto al carrito de compras
- * @param {*} data 
- */
-function agregarAlCarrito(data) {
-
-    var arrData = data.id.split('_');
-    generarVistaModal(arrData['1']);
-    $.ajax({
-        method: "GET",
-        url: urlC + "item/obtener",
-        data: { idItem: arrData['1'] },
-        success: function(respuesta) {
-            if ( respuesta.estado ) {
-                generarVistaDetalleItem( respuesta.data, respuesta.imgItems );
-            } else {
-                bootbox.alert('no fue posible obtener el producto.')                
-            }                
-        },
-        error: function() {
-            bootbox.alert('Se presentó un error. Por favor, inténtelo nuevamente.');
-        }
-    });
-}
-
-
-// Agrega o quita el resaltado del carrito de ventas
-var overIcon = function(data) {
-    $('#' + data.id).removeClass('text-secondary');
-}
-var leaveIcon = function(data) {
-    $('#' + data.id).addClass('text-secondary');
-}
-
-/**
  * Genera la vista de los productos obtenidos desde datax
+ * En uso
  * @param {*} data 
  */
 var generarVistaImagenes = function(data) {
-
     var listPdrHtml = "";
+    var imgPlaceholder = urlImg + "no-image-placeholder.jpg"; 
 
     data.data.forEach(element => {
-
-        // Valida si existen imagenes para el producto, de no ser asi, agrega una por defecto
-        var img = obtenerImagenProducto(element.item_id, data.imgItems);
         
-        // Valida el precio del producto basado en la lista a la cual pertenece el cliente
-        var valNoList = '';
-        if(localStorage.getItem('id') != null ) {
+        var imgUrl = (element.imagenes && element.imagenes.length > 0 && element.imagenes[0].url) 
+            ? urlImg + element.imagenes[0].url
+            : imgPlaceholder;
 
-            var listaPrecio = 'precio' + localStorage.getItem('lista_benf');
-            var valIvaInc = 'ivaincp' + localStorage.getItem('lista_benf');
-            var valor = element[listaPrecio];
-            var ivaInc = element[valIvaInc];            
+        var valPdr = (typeof obtenerPrecioProducto === 'function') 
+            ? obtenerPrecioProducto(element.precio_venta, 1) 
+            : "$" + element.precio_venta.toLocaleString();
 
-            if( valDefecto != listaPrecio) {
-                valNoList = precioProductoLista(element.precio1);
-            }
+        // SVG del Carrito (Estilo Apple)
+        var iconCart = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`;
 
-        } else {
-            var valor = element[valDefecto];
-            var ivaInc = element[ivaIncDefecto];
-        }
+        // SVG de WhatsApp
+        var iconWsp = `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.067 2.877 1.215 3.076.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
-        var valPdr = obtenerPrecioProducto(valor, ivaInc);
+        // 1. Seteamos variables a usar
+        var nombreProd = element.nombre;
+        var codProd = element.codigo;
+        var refProd = element.referencia;
 
-        // Formatea la descripcion extensa del producto
-        var descExt = obtenerNombreProducto(element.desc_extensa, 25);
+        // 2. Creamos el texto personalizado
+        var mensajeWsp = "¡Hola! Me interesa información sobre el producto: " + nombreProd + 
+                        " (Código: " + codProd + " | Ref: " + refProd + ")";
 
-        var codRef = '<br><p>Cod ' + element.codigo + '. Ref ' + element.referencia +  '</p>';
+        // 3. Lo codificamos para URL
+        var mensajeEncoded = encodeURIComponent(mensajeWsp);
 
-        listPdrHtml += '<div class="col-md-3">';
-        listPdrHtml += '<div class="product-item">';
-        listPdrHtml += '<a href="#" data-idProd="' + element.item_id + '" onclick="redirectItemDetail(this)"><img src="' + img + '" alt="" title="' + element.descripcion + '" width="357" height="260"></a>';
-        listPdrHtml += '<div class="down-content" style="height: 250px !important;">';
-        listPdrHtml += '<a href="#" data-idProd="' + element.item_id + '" onclick="redirectItemDetail(this)"><h4 title="' + element.descripcion + '">' + element.descripcion + codRef + '</h4></a>';
-        listPdrHtml += '<input type="hidden" id="title_' + element.item_id + '" value="' + element.descripcion + '">';
-        listPdrHtml += valNoList + '<h6><strong class="text-primary">' + valPdr + '</strong></h6>';
-        listPdrHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';
-        listPdrHtml += '</div>';        
-        listPdrHtml += '<div class="text-right" style="margin:10px;">';
-        listPdrHtml += '<i class="fa fa fa-whatsapp fa-lg text-secondary" style="margin-left:5px;" id="wspshare_' + element.item_id + '" title="Comprar por Whatsapp" onmouseleave="leaveIcon(this)" onmouseover="overIcon(this)" onclick="agregarAlCarrito(this)"></i>';
-        listPdrHtml += '<i class="fa fa-shopping-cart fa-lg text-secondary" style="margin-left:5px;" id="carritoCompras_' + element.item_id + '" title="Agregar al carrito" onmouseleave="leaveIcon(this)" onmouseover="overIcon(this)" onclick="agregarAlCarrito(this)"></i>';
+        // 4. Armamos el link final
+        var linkWsp = "https://api.whatsapp.com/send/?phone=573008225432&text=" + mensajeEncoded + "&type=phone_number&app_absent=0";
 
-
-        listPdrHtml += '<button type="button" class="btn btn-primary btn-sm btn-block">Primary</button>';
-        listPdrHtml += '<button type="button" class="btn btn-secondary btn-sm btn-block">Secondary</button>';
-
-        listPdrHtml += '</div>';
-        listPdrHtml += '</div>';
-        listPdrHtml += '</div>';
+        listPdrHtml += `
+        <div class="col-xl-3 col-lg-4 col-sm-6 mb-4">
+            <div class="apple-card">
+                <div class="apple-card-image-wrapper" onclick="redirectItemDetail(${element.id})" style="cursor:pointer;">
+                    <img src="${imgUrl}" alt="${nombreProd}">
+                </div>
+                <div class="apple-card-details">
+                    <div class="product-meta-subtle">Cod: ${codProd} | Ref: ${refProd}</div>
+                    <h4 class="apple-card-title">${nombreProd}</h4>
+                    <div class="apple-card-price">${valPdr}</div>
+                    <div class="apple-card-actions">
+                        <button class="btn-icon-only btn-cart-icon" title="Añadir al carrito" onclick="cambiarCantidad(${element.id})">
+                            ${iconCart}
+                        </button>
+                        <a href="${linkWsp}" target="_blank" class="btn-icon-only btn-wsp-icon" onclick="event.stopPropagation();">
+                            ${iconWsp}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
     });
-    $('#ul_paginator').html('');
+
     $('#prods_availables').html(listPdrHtml);
-}
+};
 
 /**
  * Obtiene los productos disponibles para el e-commerce
  * @param {*} pag 
  */
-var getImages = function(pag) {
+var obtenerProductos = function( pag, busqueda = null ) {
 
     if(pag == ""){
         pag = 1;
@@ -286,14 +118,15 @@ var getImages = function(pag) {
     //se obtienen los productos
     $.ajax({
         method: "GET",
-        url: urlC + "itemsecommerce/obtener",
-        data: { pagina: pag, cantidad: cantItems },
-        async: true,
+        url: urlC + "productos/obtener",
+        data: { pagina: pag, cantidad: cantItems, descripcion: busqueda },
+        async: false,
         success: function(respuesta) {            
 
-            if ( respuesta.estado ) {
+            if ( respuesta.cantidad > 0 ) {
+
                 /** Genera la grilla de imagenes */
-                generarVistaImagenes(respuesta); 
+                generarVistaImagenes(respuesta);
 
                 /** Obtiene la cantidad total de items en stock */
                 cantidadItems = respuesta.cantidad;
@@ -301,12 +134,15 @@ var getImages = function(pag) {
                 /** Agrega el paginador */
                 paginador();                             
             } else {
-                alert('no fue posible obtener los productos.')                
+                $('#prods_availables').html('<div class="col-12 text-center py-5"><h3 class="text-muted">No encontramos productos que coincidan.</h3></div>');
+                notificarUsuario("No se encontraron resultados", "info"); 
+                cantidadItems = 0;  
+                paginador();         
             }
             
         },
         error: function() {
-            console.log('hubo un error');
+            notificarUsuario("No se pudo obtener información de los productos", "info");
         }
       });  
 }
@@ -317,9 +153,9 @@ var getImages = function(pag) {
 function previusPage() {       
     $('.li_paginate').removeClass("active");
     pagActual = parseInt(pagActual) - 1;
+    busqueda = $('#input_search').val();
 
-    putLoaders(20);
-    getImages(pagActual);
+    obtenerProductos(pagActual, busqueda);
     paginador();
 }
 
@@ -329,9 +165,9 @@ function previusPage() {
 function nextPage() {
     $('.li_paginate').removeClass("active");
     pagActual = parseInt(pagActual) + 1;
+    busqueda = $('#input_search').val();
     
-    putLoaders(20);
-    getImages(pagActual);
+    obtenerProductos(pagActual, busqueda);
     paginador();
 }
 
@@ -342,11 +178,9 @@ function nextPage() {
 function changePag(data) {
     var arrPg = data.id.split("_");
     pagActual = arrPg['1'];
+    busqueda = $('#input_search').val();
 
-    $('.li_paginate').removeClass("active");
-
-    putLoaders(20);
-    getImages(pagActual);
+    obtenerProductos(pagActual, busqueda);
     paginador();
 } 
 
@@ -354,158 +188,62 @@ function changePag(data) {
  * Pinta el full paginador en el html
  */
 var paginador = function() {
-
-    var cantPag = Math.ceil(cantidadItems/cantItems);
-    var cantVisible = 5;
-
+    var cantPag = Math.ceil(cantidadItems / cantItems);
+    var current = parseInt(pagActual);
+    var maxVisible = 5; // Número de botones de página a mostrar
     var pagHtml = "";
 
-    if(parseInt(pagActual) > 1){
-        pagHtml += '<li><a href="#" onclick="previusPage()"><i class="fa fa-angle-double-left"></i></a></li>';
+    // 1. Botón Anterior (Double Left) - Solo si no estamos en la 1
+    if (current > 1) {
+        pagHtml += `<li><a href="javascript:void(0)" onclick="previusPage()" class="pag-nav-btn">${iconArrowLeft}</a></li>`;
     }
-    
-    pagHtml += '<li class="li_paginate" id="li_1"><a href="#" onclick="changePag(this)" id="apg_1">1</a></li>';
 
-    if(parseInt(pagActual) == 1 ) {
-        for(var i = 2; i <= cantVisible; i++) {
-            pagHtml += '<li class="li_paginate" id="li_' + i + '"><a href="#" onclick="changePag(this)" id="apg_' + i + '">' + i + '</a></li>';
+    // Calcular el rango de páginas visibles
+    var start = Math.max(1, current - Math.floor(maxVisible / 2));
+    var end = Math.min(cantPag, start + maxVisible - 1);
+
+    // Ajustar si estamos cerca del final
+    if (end - start + 1 < maxVisible) {
+        start = Math.max(1, end - maxVisible + 1);
+    }
+
+    // 2. Primera página y puntos suspensivos iniciales
+    if (start > 1) {
+        pagHtml += `<li class="li_paginate"><a href="javascript:void(0)" onclick="changePag(this)" id="apg_1">1</a></li>`;
+        if (start > 2) {
+            pagHtml += `<li class="pag-dots"><span>...</span></li>`;
         }
     }
 
-    if(parseInt(pagActual) > 1 && parseInt(pagActual) < cantVisible) {
-        for(var i = 2; i <= cantVisible; i++) {
-            pagHtml += '<li class="li_paginate" id="li_' + i + '"><a href="#" onclick="changePag(this)" id="apg_' + i + '">' + i + '</a></li>';
-        }
+    // 3. Páginas numéricas centrales
+    for (var i = start; i <= end; i++) {
+        var activeClass = (i === current) ? "active" : "";
+        pagHtml += `
+            <li class="li_paginate ${activeClass}" id="li_${i}">
+                <a href="javascript:void(0)" onclick="changePag(this)" id="apg_${i}">${i}</a>
+            </li>`;
     }
 
-    if(parseInt(pagActual) >= cantVisible) {
-        pagHtml += '<li class="li_paginate"><a href="#">...</a></li>';
-        pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-2) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-2) + '">' + (parseInt(pagActual)-2) + '</a></li>';
-        pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-1) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-1) + '">' + (parseInt(pagActual)-1) + '</a></li>';
-        pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)) + '">' + (parseInt(pagActual)) + '</a></li>';
-        pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)+1) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)+1) + '">' + (parseInt(pagActual)+1) + '</a></li>';
-        pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)+2) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)+2) + '">' + (parseInt(pagActual)+2) + '</a></li>';
+    // 4. Puntos suspensivos finales y última página
+    if (end < cantPag) {
+        if (end < cantPag - 1) {
+            pagHtml += `<li class="pag-dots"><span>...</span></li>`;
+        }
+        pagHtml += `<li class="li_paginate"><a href="javascript:void(0)" onclick="changePag(this)" id="apg_${cantPag}">${cantPag}</a></li>`;
     }
 
-    if(pagActual != cantPag) {
-        pagHtml += '<li class="li_paginate"><a href="#">...</a></li>';
-    }
-
-    // Agrega la ultima pagina
-    pagHtml += '<li class="li_paginate" id="li_' + cantPag + '"><a href="#" onclick="changePag(this)" id="apg_' + cantPag + '">' + cantPag + '</a></li>';
-
-    // Agrega el boton next
-    pagHtml += '<li><a href="#" onclick="nextPage()"><i class="fa fa-angle-double-right"></i></a></li>';
-
-    // Valida que la pagina no se encuentre entre las 5 finales
-    if(parseInt(pagActual) >= ((parseInt(cantPag) - parseInt(cantVisible))+1)) {
-        pagHtml = '<li><a href="#" onclick="previusPage()"><i class="fa fa-angle-double-left"></i></a></li>';    
-        pagHtml += '<li class="li_paginate" id="li_1"><a href="#" onclick="changePag(this)" id="apg_1">1</a></li>';        
-        pagHtml += '<li class="li_paginate"><a href="#">...</a></li>';
-
-        if(parseInt(pagActual) < parseInt(cantPag)) {
-
-            var k = parseInt(cantVisible - (parseInt(cantPag) - parseInt(pagActual)));
-            
-            for(k; k > 0 ; k--) {
-                pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual) - k) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual) - k) + '">' + (parseInt(pagActual) - k) + '</a></li>';
-            }
-
-            for(var i = parseInt(pagActual); i <= cantPag; i++) {
-                pagHtml += '<li class="li_paginate" id="li_' + i + '"><a href="#" onclick="changePag(this)" id="apg_' + i + '">' + i + '</a></li>';
-            }
-        }
-
-        // Valida si la pagina seleccionada es igual a la cantidad de paginas actual
-        if(parseInt(pagActual) == parseInt(cantPag)) {
-            pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-4) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-4) + '">' + (parseInt(pagActual)-4) + '</a></li>';
-            pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-3) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-3) + '">' + (parseInt(pagActual)-3) + '</a></li>';
-            pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-2) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-2) + '">' + (parseInt(pagActual)-2) + '</a></li>';
-            pagHtml += '<li class="li_paginate" id="li_' + (parseInt(pagActual)-1) + '"><a href="#" onclick="changePag(this)" id="apg_' + (parseInt(pagActual)-1) + '">' + (parseInt(pagActual)-1) + '</a></li>';
-            pagHtml += '<li class="li_paginate" id="li_' + pagActual + '"><a href="#" onclick="changePag(this)" id="apg_' + pagActual + '">' + pagActual + '</a></li>';
-        }
-
-        if(parseInt(pagActual) != parseInt(cantPag)){
-            pagHtml += '<li><a href="#" onclick="nextPage()"><i class="fa fa-angle-double-right"></i></a></li>';
-        }
+    // 5. Botón Siguiente (Double Right) - Solo si no estamos al final
+    if (current < cantPag) {
+        pagHtml += `<li><a href="javascript:void(0)" onclick="nextPage()" class="pag-nav-btn">${iconArrowRight}</a></li>`;
     }
 
     $('#ul_paginator').html(pagHtml);
+};
 
-    $('#li_' + pagActual).addClass("active");
-
-}
-
-/**
- * Buscar productos por palabra clave
- */
-function buscarProductos() {
-    var descProd = $('#inpProductoPC').val();
-    putLoaders(8);
-    if(descProd != "") {
-        $.ajax({
-            method: "GET",
-            url: urlC + "items/buscaritem",
-            data: { descripcion: descProd },
-            success: function(respuesta) {
-    
-                if ( respuesta.estado ) {
-                    generarVistaImagenes(respuesta);                    
-                } else {
-                    bootbox.alert('no fue posible obtener los productos.', function(){
-                        $('#ul_paginator').html('');
-                        $('#prods_availables').html('');
-                    });
-                }
-                
-            },
-            error: function() {
-                console.log('hubo un error');
-            }
-        });
-    } else {
-        getImages(pagActual);
-        paginador();
-    }
-}
-
-/**
- * Crea un loader en forma de grilla de imagenes
- */
-var putLoaders = function(cant = 20) {
-    var listPdrHtml = "";    
-
-    for( var i = 0; i < cant; i++) {
-
-        listPdrHtml += '<div class="col-md-3">';
-        listPdrHtml += '<div class="product-item">';
-        listPdrHtml += '<div style="position: relative">';
-        listPdrHtml += '<a href="#"><img src="assets/images/empty.jpg" width="357" height="260"></a>';                
-        listPdrHtml += '</div>';
-        listPdrHtml += '<div class="down-content text-center">';
-        listPdrHtml += '<i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>';
-        listPdrHtml += '</div>';        
-        listPdrHtml += '</div>';
-        listPdrHtml += '</div>';    
-    }
-
-    $('#prods_availables').html(listPdrHtml);
-
-}
 
 $( document ).ready(function() {   
 
-    /**Agrega los loaders */
-    putLoaders(20);
-
     /**Obtiene los items y sus imagenes */
-    getImages(pagActual);  
-
-    /**Agrega el evento de presionar enter cuando se encuentra en el input de buscar productos */
-    $('#inpProductoPC').keypress(function(e){
-        if(e.keyCode == 13){
-            buscarProductos();
-        }
-    });
+    obtenerProductos(pagActual);  
 
 });

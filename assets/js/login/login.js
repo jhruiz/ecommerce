@@ -27,6 +27,7 @@ var validarLogin = function(usuario, password) {
 
 /**
  * Funcion para realizar el login del usuario cliente
+ * En uso
  */
 function loginUser() {
     var user = $('#user').val();
@@ -34,44 +35,41 @@ function loginUser() {
 
     if(validarLogin(user, password)) {
         $.ajax({
-            method: "GET",
-            url: urlC + "usuario/login",
+            method: "POST",
+            url: urlC + "cliente/login",
             data: { user: user, password: password },
             success: function(respuesta) {
                 if( respuesta.estado ) {
-                    if( respuesta.data['0'].estado_id == '3' ) {
-
-                        bootbox.alert('El usuario se encuentra inactivo.');
-    
-                    } else if( respuesta.data['0'].estado_id == '1' ) {
-    
-                        bootbox.alert('El usuario debe ser verificado.');
-    
+                    if( respuesta.data.estado != '1' ) {
+                        notificarUsuario("El usuario se encuentra inactivo.", "info");
                     } else {
-                        localStorage.setItem('email', respuesta.data['0'].email);
-                        localStorage.setItem('estado', respuesta.data['0'].estado_id);
-                        localStorage.setItem('id', respuesta.data['0'].id);
-                        localStorage.setItem('nit', respuesta.data['0'].nit);
-                        localStorage.setItem('lista_benf', respuesta.data['0'].listaprecio);
-                        localStorage.setItem('nom_benf', respuesta.data['0'].primer_nombre+' '+respuesta.data['0'].segundo_nombre+' '+respuesta.data['0'].primer_apellido+' '+respuesta.data['0'].segundo_apellido);
-                        localStorage.setItem('telef_benf', respuesta.data['0'].celular);
-                        localStorage.setItem('direccion', respuesta.data['0'].direccion);
-                        localStorage.setItem('ciudad', respuesta.datac.descripcion);
+
+                        notificarUsuario(respuesta.mensaje, "success");
+                        
+                        localStorage.setItem('email', respuesta.data.email);
+                        localStorage.setItem('estado', respuesta.data.estado_id);
+                        localStorage.setItem('id', respuesta.data.id);
+                        localStorage.setItem('identificacion', respuesta.data.nit);
+                        localStorage.setItem('nombre', respuesta.data.nombre);
+                        localStorage.setItem('celular', respuesta.data.celular);
+                        localStorage.setItem('direccion', respuesta.data.direccion);
+                        localStorage.setItem('ciudad', respuesta.data.ciudad);
+                        localStorage.setItem('empresa', respuesta.data.empresa_id);
 
                         window.location.href = 'index.php';
                     }
                 } else {
-                    bootbox.alert(respuesta.mensaje);
+                    notificarUsuario(respuesta.mensaje, "info");
                 }
                 
             },
             error: function() {
-                bootbox.alert('Se produjo un error. Por favor, inténtelo nuevamente.');
+                notificarUsuario("Se produjo un error. Por favor, inténtelo nuevamente.", "info");
             }
           })        
 
     } else {
-        bootbox.alert('El usuario y/o contraseña no son correctos.');
+        notificarUsuario("El usuario y/o contraseña no son correctos.", "info");
     }
 }
 

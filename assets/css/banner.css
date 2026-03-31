@@ -1,40 +1,130 @@
-div#text_1_banner { 
-    width: 0px; 
-    text-transform: uppercase;
-    white-space: nowrap; 
-    overflow: hidden;  
+/* Header con efecto desenfoque estilo Apple */
+.main-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid #d2d2d7;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
 }
 
-div#text_2_banner { 
-    padding-left: 20px;
-    width: 0px; 
-    white-space: nowrap; 
-    overflow: hidden;  
-    margin-top: 40px;
+/* Contenedor del Logo */
+.logo-container img {
+    max-height: 45px; /* Ajusta según tu logo */
+    width: auto;
+    padding: 5px 0;
 }
 
-div#text_3_banner { 
-    width: 0px; 
-    text-transform: uppercase;
-    white-space: nowrap; 
+/* Navegación: Texto pequeño y elegante */
+.nav-links-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-div#text_4_banner { 
-    padding-left: 20px;
-    width: 0px; 
-    white-space: nowrap; 
-    margin-top: 40px;
+.nav-item-apple {
+    color: #1d1d1f;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-div#text_5_banner { 
-    width: 0px; 
-    text-transform: uppercase;
-    white-space: nowrap; 
+.nav-item-apple:hover {
+    color: #0066cc; /* Azul Apple al pasar el mouse */
+    text-decoration: none;
 }
 
-div#text_6_banner { 
-    padding-left: 20px;
-    width: 0px; 
-    white-space: nowrap; 
-    margin-top: 40px;
+/* Buscador moderno tipo píldora */
+.search-bar-apple {
+    background: #f5f5f7;
+    border-radius: 20px;
+    padding: 6px 15px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+.search-bar-apple:focus-within {
+    background: #ffffff;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 4px rgba(0,102,204,0.1);
+}
+
+.search-bar-apple input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.8rem;
+    color: #1d1d1f;
+    width: 150px;
+}
+
+/* Iconos de acción (Carrito / Usuario) */
+.action-icon {
+    font-size: 1.1rem;
+    color: #424245;
+    position: relative;
+    padding: 0 10px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    background: #0066cc;
+    color: white;
+    font-size: 0.65rem;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-weight: bold;
+}
+
+/* Contenedor del icono (lo mantenemos relativo) */
+.cart-icon-wrapper {
+    position: relative;
+    display: inline-flex; /* Cambiado a inline-flex para mejor alineación */
+    align-items: center;
+    justify-content: center;
+    color: #1d1d1f;
+    padding: 10px; /* Un poco más de aire */
+    transition: opacity 0.2s ease;
+    text-decoration: none !important;
+}
+
+.cart-icon-wrapper:hover {
+    opacity: 0.7;
+}
+
+/* El círculo del número (Badge) - LA CORRECCIÓN CLAVE */
+.apple-cart-badge {
+    position: absolute;
+    top: -5px; /* Ajusta según el tamaño exacto del icono */
+    right: -8px; /* Ajusta según el tamaño exacto del icono */
+    background-color: #0071e3; /* Azul Apple */
+    color: #ffffff;
+    
+    /* Fuente: Usamos una fuente de sistema o Inter para mejor alineación */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11px; /* Mantenemos el tamaño pequeño y limpio */
+    font-weight: 700;
+    line-height: 1; /* Forzamos altura de línea simple */
+
+    /* Tamaños Fijos para el círculo */
+    width: 20px; 
+    height: 20px;
+    border-radius: 50%; /* Círculo perfecto */
+
+    /* EL SECRETO DEL CENTRADO PERFECTO: Flexbox */
+    display: flex;
+    align-items: center; /* Centrado vertical absoluto */
+    justify-content: center; /* Centrado horizontal absoluto */
+    
+    /* Eliminamos el padding que ensucia la alineación */
+    padding: 0; 
+    
+    /* Borde blanco para resaltar sobre el fondo */
+    border: 2px solid #ffffff; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

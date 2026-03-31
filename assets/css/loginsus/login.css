@@ -1,0 +1,112 @@
+/* Contenedor principal con fondo gris muy claro */
+.login-wrapper {
+    background-color: #f5f5f7;
+    padding: 100px 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+/* La tarjeta de login */
+.apple-login-card {
+    background: #ffffff;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 48px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.login-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.login-header p {
+    color: #86868b;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.login-logo {
+    height: 40px;
+    margin-bottom: 24px;
+}
+
+/* Inputs minimalistas */
+.apple-input-group {
+    margin-bottom: 16px;
+}
+
+.apple-input-group input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #d2d2d7;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #1d1d1f;
+    transition: all 0.3s ease;
+}
+
+.apple-input-group input:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+    outline: none;
+}
+
+/* Botón principal estilo Apple */
+.apple-btn-primary {
+    width: 100%;
+    background-color: #0071e3;
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+}
+
+.apple-btn-primary:hover {
+    background-color: #0077ed;
+    transform: scale(1.01);
+}
+
+.apple-btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Separador y links */
+.login-divider {
+    margin: 32px 0 16px;
+    border-top: 1px solid #d2d2d7;
+    position: relative;
+}
+
+.login-divider span {
+    background: #fff;
+    padding: 0 12px;
+    color: #86868b;
+    font-size: 12px;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.apple-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.apple-link:hover {
+    text-decoration: underline;
+}

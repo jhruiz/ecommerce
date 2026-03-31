@@ -1,12 +1,166 @@
-.cont_img_ppal{
-    position: relative;
-    display: inline-block;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.apple-card {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
     text-align: center;
 }
 
-.centrado{
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.apple-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+/* Imagen: Volvemos al balance de Apple */
+.apple-card-image-wrapper {
+    height: 220px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    padding: 15px; /* Un poco de aire para que no se vea pegada a los bordes */
+}
+
+.apple-card-image-wrapper img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.apple-card-details {
+    padding: 0 1.5rem 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* METADATA TÉCNICA: Pequeña, gris y cursiva como pediste */
+.product-meta-subtle {
+    font-size: 10px;
+    color: #a1a1a6; /* Gris muy suave */
+    font-style: italic;
+    margin-bottom: 5px;
+    letter-spacing: 0.3px;
+}
+
+.apple-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.apple-card-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 15px;
+}
+
+/* BOTONES: Volvemos a la discreción del avance anterior */
+.apple-card-actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-top: 10px; /* Un poco de aire sobre los botones */
+}
+
+.btn-icon-only {
+    background: #f5f5f7;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.btn-cart-icon svg { color: #1d1d1f; }
+
+.btn-wsp-icon svg {
+    color: #25d366;
+    width: 24px; /* Un poco más grande que el carrito para que resalte */
+    height: 24px;
+}
+
+.btn-icon-only:hover {
+    background: #e8e8ed;
+    transform: scale(1.15);
+}
+
+/* Metadata técnica (el código y ref) */
+.product-meta-subtle {
+    font-size: 10px;
+    color: #86868b; /* Gris un poco más oscuro para legibilidad */
+    font-style: italic;
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+}
+
+/* CSS PARA PAGINADOR */
+
+#ul_paginator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 40px 0;
+    gap: 8px; /* Espacio entre botones */
+}
+
+/* Estilo base de cada número */
+.li_paginate a, .pag-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Círculos perfectos */
+    color: #1d1d1f;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background-color: transparent;
+}
+
+/* Hover: gris suave de Apple */
+.li_paginate a:hover, .pag-nav-btn:hover {
+    background-color: #f5f5f7;
+}
+
+/* Estado Activo: El círculo negro/azul de Apple */
+.li_paginate.active a {
+    background-color: #0071e3; /* Azul Apple */
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Puntos suspensivos */
+.pag-dots {
+    color: #86868b;
+    padding: 0 5px;
+    cursor: default;
+}
+
+/* Botones de navegación (flechas) */
+.pag-nav-btn {
+    color: #0071e3; /* Flechas azules */
+}
+
+.pag-nav-btn:hover {
+    transform: scale(1.1);
 }

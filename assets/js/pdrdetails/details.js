@@ -1,495 +1,256 @@
 /**
- * Valida que el campo sea numérico
+ * Función principal para renderizar vistas del detalle de producto
+ * @param {*} response 
  */
- function validarNumeros() {
-    valor = $('#uniFactor').val();
-    if( isNaN(valor) ) {
-        $('#uniFactor').val($('#uniFactorHid').val());
-    }
-}
+var generarVistaDetalladaItem = function(response) {
+    const producto = response.data;
+    const sugeridos = response.sugeridos;
+
+    // 1. Renderizar Galería
+    renderizarGaleria(producto.imagenes);
+
+    // 2. Renderizar Información Principal
+    renderizarInfoPrincipal(producto, response.es_top_ventas, response.ventas_reales);
+
+    // 3. Renderizar Sugeridos (También te puede interesar)
+    renderizarSugeridos(sugeridos);
+};
 
 /**
- * Si el campo cantidad se deja vacio o se pone en cero, se agrega 
- * la unidad de factor por defecto configurada en datax
+ * Maneja la imagen principal y las miniaturas
+ * En uso
  */
-function restaurarUniFactor() {
-    var uniFactor = $('#uniFactor').val();
-
-    if( uniFactor == "" || uniFactor == 0 ) {
-        $('#uniFactor').val($('#uniFactorHid').val());
-    }
-
-}
-
-/**
- * Agrega zoom a la imagen principal
- * @param {*} idImg 
- */
-var zoomImagen = function(idImg){
-    if( idImg != "" ) {
-        $('#' + idImg).elevateZoom({
-            cursor: "crosshair",
-            zoomWindowOffetx: 30,
-            zoomWindowWidth: 800,
-            borderSize: 0
-        });
-    }
-}
-
-/**
- * Obtiene el precio del producto en la lista 3
- * @returns 
- */
- var precioProductoLista = function(precio) {
-    var valorProducto = "";
-
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-      });
-
-    if (precio != "" ) {
-        valorProducto = '<del>' + formatter.format(precio).toString() + '</del>';
-    } else {
-        valorProducto = '$0'
-    }
-
-    return valorProducto;    
-}
-
-/**
- * Redirecciona a la pagina de detalles del producto y guarda en sesion el id de producto
- * @param {*} id 
- */
- var redirectItemDetail = function(data) {
-
-    sessionStorage.setItem('idProd', $(data).data('idprod'));
-    window.location.href = urlEC + "product-details.php";
-}
-
-/**
- * Obtiene y formatea el precio del producto a pesos.
- * Valida si el iva se encuentra incluido o no
- * @param {*} precio 
- * @param {*} ivaInc 
- * @returns 
- */
- var  obtenerPrecioProducto = function(precio, ivaInc) {
-    var valorProducto = "";
-
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-      });
-
-    if (precio != "" ) {
-        var iva = ivaInc == '1' ? ' IVA incluido' : ' + IVA';
-        valorProducto = '<b>' + formatter.format(precio).toString() + "</b> COP" + '<p>' + iva + '</p>';
-    }
-
-    return valorProducto;
-}
-
-/**
- * Valida el tamaño de la descripcion del producto y formatea un tamaño estandar
- * @param {*} descripcion 
- * @returns 
- */
- var obtenerNombreProducto = function(descripcion, limite) {
-    var nDescripcion = "";
+function renderizarGaleria(imagenes) {
+    const contenedorThumbnails = $('#sec_images');
+    const contenedorPrincipal = $('#ppal_image');
     
-    if(descripcion != '') {
-        if( descripcion.length > limite ) {
-            nDescripcion = descripcion.substring(0,limite) + "...";
-        } else {
-            nDescripcion = descripcion;
-        }
+    // Si no hay imágenes, poner un placeholder
+    if (!imagenes || imagenes.length === 0) {
+        contenedorPrincipal.html(`<img src="${urlImg}no-image-placeholder.jpg" class="img-fluid">`);
+        contenedorThumbnails.hide();
+        return;
     }
 
-    return nDescripcion;
-}
-
-/**
- * Valida si el producto tiene una imagen o agrega una por defecto
- * @param {*} imagen 
- * @returns 
- */
- var obtenerImagenProducto = function(imagen) {
-    var img = "";
-    if( imagen == null ){
-        img = 'assets/images/empty.jpg';
-    } else {
-        img = urlImg + imagen['0'].url;
-    }    
-
-    return img;
-}
-
-/**
- * Obtiene el id de la imagen principal
- * @param {*} imagen 
- * @returns 
- */
-var obtenerIdImagenProducto = function(imagen) {
-    var id = "";
-
-    if( imagen == null ) {
-        id = "";        
-    } else {
-        id = "ppal_" + imagen['0'].id;
-    }
-
-    return id;
-}
-
-/**
- * Se agrega la imagen principal del detalle del producto
- * @param {*} imagenes 
- */
-var agregarImagenPrincipal = function(imagenes) {
-
-    var detailHtml = "";
-
-    // Obtiene la imagen principal
-    var imgPpal = obtenerImagenProducto(imagenes);
-
-    var idImg = obtenerIdImagenProducto(imagenes);
+    // Limpiar contenedores
+    contenedorThumbnails.empty().show();
     
-    // Agrega la imagen principal
-    detailHtml += '<img id="' + idImg + '" src="' + imgPpal + '" class="img-fluid " width="450" height="355" data-zoom-image="' + imgPpal + '"/>';
-    $('#ppal_image').html(detailHtml);
-
-    zoomImagen(idImg);
-}
-
-/**
- * Cambia la imagen que se muestra en la vista principal
- * @param {*} data 
- */
-function cambiarImagenPrincipal(data) {
-
-    // Elimina clase que agrega sombreado al listado de imagenes
-    $('.second-img').each( function() {
-        $(this).removeClass('img-border');
-    })
-
-    // Agrega sobreado a la imagen seleccionada
-    $('#' + data.id).addClass('img-border');
-
-    // Obtener el id de la nueva imagen principal
-    var nArrId = data.id.split('_');
-    var ppalId = "ppal_" + nArrId['1'];
-
-    // Cambia la imagen del visor principal
-    var detailHtml = "";
-    detailHtml += '<img id="' + ppalId + '" src="' + data.src + '" class="img-fluid wc-image" width="450" height="355" data-zoom-image="' + data.src + '"/>';
-    $('#ppal_image').html(detailHtml);
-
-    zoomImagen(ppalId);
-}
-
-/**
- * Se agregan las imagenes secundarias del item principal
- * @param {*} imagenes 
- */
-var agregarImagenesSecundarias = function(imagenes) {
-    
-    // Se recorren las imagenes relacionadas con el item principal 
-    var detailHtml = "";
-    imagenes.forEach(function callback(currentValue, index, array) {
-
-        var img = "";
-        if ( currentValue.url == null ) {
-            img = 'assets/images/empty.jpg';
-        } else {
-            img = urlImg + currentValue.url;
-        }
-        
-        detailHtml += '<div>';
-        detailHtml += '<div>';
-        detailHtml += '<img src="' + img + '" alt="" id="secimg_' + currentValue.id + '" onmouseover="cambiarImagenPrincipal(this)" class="img-fluid second-img" width="100" height="79">';
-        detailHtml += '</div>';
-        detailHtml += '<br>';
-        detailHtml += '</div>';
-
+    // Generar Miniaturas
+    imagenes.forEach((img, index) => {
+        const urlCompleta = `${urlImg}${img.url}`; // Ajusta tu URL base
+        const thumb = $(`
+            <div class="thumb-item ${index === 0 ? 'active' : ''}">
+                <img src="${urlCompleta}" onclick="cambiarImagenPrincipal('${urlCompleta}', this)">
+            </div>
+        `);
+        contenedorThumbnails.append(thumb);
     });
 
-    $('#sec_images').html(detailHtml);
+    // Colocar la primera imagen como principal por defecto
+    const primeraUrl = `${urlImg}${imagenes[0].url}`;
+    cambiarImagenPrincipal(primeraUrl);
 }
 
 /**
- * Se agrega la información detallada del producto
+ * Función para cambiar la imagen principal
+ * En uso
+ * @param {*} url 
+ * @param {*} element 
  */
-var agregarInformacionItemPpal = function(detalles) {
-
-    // Valida el precio del producto basado en la lista a la cual pertenece el cliente
-    var valNoList = '';
-    if(localStorage.getItem('id') != null ) {
-
-        var listaPrecio = 'precio' + localStorage.getItem('lista_benf');
-        var valIvaInc = 'ivaincp' + localStorage.getItem('lista_benf');
-        var valor = detalles[listaPrecio];
-        var ivaInc = detalles[valIvaInc];      
-
-        if( valDefecto != listaPrecio) {
-            valNoList = precioProductoLista(detalles.precio1);
-        }
-
-    } else {
-        var valor = detalles[valDefecto];
-        var ivaInc = detalles[ivaIncDefecto];
-    }  
+function cambiarImagenPrincipal(url, element) {
+    const contenedor = $('#ppal_image');
+    contenedor.fadeOut(200, function() {
+        $(this).html(`<img src="${url}" class="img-fluid zoom-apple" id="img-zoom" data-zoom-image="${url}">`).fadeIn(200);
         
-    // Nombre del producto
-    $('#tituloPpal').html(detalles.descripcion);
-
-    $('#codItem').html('Código ' + detalles.codigo);
-    $('#referencia').html('Referencia ' + detalles.referencia);
-    $('#unidadFactor').html('Unidades por empaque ' + detalles.unidad_factor);
-
-    if(valNoList != "") {
-        $('#delPrice').html(valNoList);
-    }
-
-    // Precio de venta del producto
-    $('#precioPpal').html(formatearNumero(valor, ivaInc));
-
-    // Descripcion extendida del producto
-    $('#descripcionPpal').html(detalles.desc_extensa);
-
-    // Se agrega la cantidad del producto por defecto
-    $('#uniFactor').val(detalles.unidad_factor);
-    $('#uniFactorHid').val(detalles.unidad_factor);
-    $('#codHid').val(detalles.codigo);
-    $('#descHid').val(detalles.descripcion + '<br> Ref. ' + detalles.referencia);
-    
-}
-
-// Agrega o quita el resaltado del carrito de ventas
-var overIcon = function(data) {
-    $('#' + data.id).removeClass('text-secondary');
-}
-var leaveIcon = function(data) {
-    $('#' + data.id).addClass('text-secondary');
-}
-
-/**
- * Se agrega la información de los items relacionados por grupo
- * @param {*} grupo 
- */
-var agregarItemsPorGrupo = function(grupo) {
-    var gruposHtml = "";
-
-    grupo.forEach( element => {
-        var imagenes = [];
-        var urlImagen = new Object();
-        urlImagen.url = element.url_imagen;
-        imagenes['0'] = urlImagen;
-
-        // Se obtiene la imagen principal si existe
-        var img = obtenerImagenProducto(imagenes);
-        
-        // Valida el precio del producto basado en la lista a la cual pertenece el cliente
-        var valNoList = '';
-        if(localStorage.getItem('id') != null ) {
-
-            var listaPrecio = 'precio' + localStorage.getItem('lista_benf');
-            var valIvaInc = 'ivaincp' + localStorage.getItem('lista_benf');
-            var valor = element[listaPrecio];
-            var ivaInc = element[valIvaInc];            
-
-            if( valDefecto != listaPrecio) {
-                valNoList = precioProductoLista(element.precio1);
-            }
-
-        } else {
-            var valor = element[valDefecto];
-            var ivaInc = element[ivaIncDefecto];
+        // Re-inicializar zoom si usas elevateZoom
+        if($.fn.elevateZoom) {
+            $('.zoom-apple').elevateZoom({ zoomType: "inner", cursor: "crosshair" });
         }
+    });
 
-        // Formatea la descripcion extensa del producto
-        var descExt = obtenerNombreProducto(element.desc_extensa, 21);        
-
-        // Se obtiene el valor de venta del producto formateado
-        var valPdr = obtenerPrecioProducto(valor, ivaInc);
-
-        var codRef = '<br><p>Cod ' + element.codigo + '. Ref ' + element.referencia +  '</p>';
-
-        // Se crea el html de los productos relacionados por grupo
-        gruposHtml += '<div class="col-md-3">';
-        gruposHtml += '<div class="product-item">';
-        gruposHtml += '<a href="#" data-idProd="' + element.item_id + '" onclick="redirectItemDetail(this)"><img src="' + img + '" alt="" title="' + element.descripcion + '" width="215" height="170"></a>';
-        gruposHtml += '<div class="down-content" style=" height: 220px !important;">';
-        gruposHtml += '<a href="#" data-idProd="' + element.item_id + '" onclick="redirectItemDetail(this)"><h4 title="' + element.descripcion + '">' + element.descripcion + codRef + '</h4></a>';
-        gruposHtml += '<input type="hidden" id="title_' + element.item_id + '" value="' + element.descripcion + '">';
-        gruposHtml += valNoList + '<h6>' + valPdr + '</h6>';
-        gruposHtml += '<p title="' + element.desc_extensa + '">' + descExt + '</p>';
-        gruposHtml += '</div>';
-        gruposHtml += '<div class="text-right" style="margin:10px;"><i class="fa fa-shopping-cart fa-lg text-secondary" id="carritoCompras_' + element.item_id + '" style="cursor: pointer;" title="Agregar al carrito" onmouseleave="leaveCar(this)" onmouseover="overCar(this)" onclick="agregarAlCarritoDesdeGrupo(this)"></i></div>';
-        gruposHtml += '</div>';
-        gruposHtml += '</div>';
-    })
-
-    $('#imgGrupos').html(gruposHtml);
+    if (element) {
+        $('.thumb-item').removeClass('active');
+        $(element).parent().addClass('active');
+    }
 }
 
 /**
- * Se agrega la información de los items relacionados por linea
- * @param {*} linea
+ * Pinta textos, precios y descripción
+ * En uso
  */
-var agregarItemsPorLinea = function(linea) {
-    var lineaHtml = "";
+function renderizarInfoPrincipal(p, topVentas, totalVendidos) {
 
-    linea.forEach( element => {
-
-        // Se obtiene la imagen principal si existe
-        var img = obtenerImagenProducto(imagenes);
-
-        // Se obtiene la descripcion del producto formateada para un tamaño adecuado
-        var descripcion = obtenerNombreProducto(element.descrip);
-
-        // Se obtiene el valor de venta del producto formateado
-        var valPdr = obtenerPrecioProducto(element.precio3, element.iva_inc_p3);
-
-        // Se crea el html de los productos relacionados por linea
-        lineaHtml += '<div class="col-md-3">';
-        lineaHtml += '<div class="product-item">';
-        lineaHtml += '<a href="#" data-idProd="' + element.cod_item + '" onclick="redirectItemDetail(this)"><img src="' + img + '" alt="" title="' + element.descrip + '" width="215" height="170"></a>';
-        lineaHtml += '<div class="down-content">';
-        lineaHtml += '<a href="#" data-idProd="' + element.cod_item + '" onclick="redirectItemDetail(this)"><h4 title="' + element.descrip + '">' + descripcion + '</h4></a>';
-        lineaHtml += '<h6>' + valPdr + '</h6>';
-        lineaHtml += '</div>';
-        lineaHtml += '</div>';
-        lineaHtml += '</div>';
-    })
-
-    $('#imgLineas').html(lineaHtml);
-}
-
-/**
- * Formatea el número a un precio
- * @param {*} precioVenta 
- */
-var formatearNumero = function(precioVenta, ivaInc) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-      });
+    $('#referencia').text(p.categoria + ' | ' + p.referencia);
+    $('#tituloPpal').text(p.nombre);
+    $('#codItem').text('SKU: ' + p.codigo);
     
-    if (precioVenta != "" ) {
-        var iva = ivaInc == '1' ? ' IVA incluido' : ' + IVA';
-        precioVenta = '<b>' + formatter.format(precioVenta).toString() + "</b> COP" + '<p>' + iva + '</p>';
+    // Formateo de precio (Estilo Apple: limpio)
+    const precioFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(p.precio_venta);
+    $('#precioPpal').text(precioFmt);
+
+    // Si hay precio máximo (oferta), mostrar el tachado
+    if (parseFloat(p.precio_maximo) > parseFloat(p.precio_venta)) {
+        const precioMaxFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(p.precio_venta);
+        $('#delPrice').html(`<span class="text-muted text-decoration-line-through">${precioMaxFmt}</span>`);
+    } else {
+        $('#delPrice').empty();
+    }   
+
+    // Limpiamos primero por si acaso
+    $('#urgencia_container, #social_proof_container').empty();
+
+    // 1. Mostrar Stock bajo si aplica
+    if (p.existenciaactual > 0 && p.existenciaactual <= 5) {
+        $('#urgencia_container').append(`
+            <div class="apple-badge-stock">
+                <i class="fa fa-clock-o"></i> ¡Últimas ${p.existenciaactual} unidades!
+            </div>
+        `);
     }
 
-    return precioVenta;
+    // 2. Mostrar Prueba Social (Ventas)
+    if (topVentas) {
+        $('#social_proof_container').append(`
+            <div class="social-proof-wrapper">
+                <div class="proof-line">
+                    <i class="fa fa-star"></i> 
+                    <span>Producto <span class="highlight-text">Top Ventas</span></span>
+                </div>
+                <div class="proof-line">
+                    <i class="fa fa-users"></i> 
+                    <span><span class="highlight-text">Más de ${totalVendidos} personas</span> lo han comprado</span>
+                </div>
+            </div>
+        `);
+    }
+
+    // Descripción: Limpiamos posibles estilos inline que vengan de la DB para que no rompan el diseño
+    $('#descripcionPpal').html(p.desc_extensa).scrollTop(0);
+    
+    // Guardamos IDs para el carrito
+    $('#codHid').val(p.codigo);
+    $('#descHid').val(p.nombre);
 }
 
 /**
- * General el html con la información del detalle del producto
- * @param {*} data 
+ * Renderiza los productos sugeridos con el diseño de cards Apple
+ * En uso
  */
-var generarVistaDetalladaItem = function(data, grupo, imagenes) {
+function renderizarSugeridos(sugeridos) {
+    const contenedor = $('#imgGrupos');
+    contenedor.empty();
 
-    // Se agrega la imagen principal
-    agregarImagenPrincipal(imagenes);
-
-    // Se agregan las imagenes secundarias
-    if( imagenes != null ){
-        agregarImagenesSecundarias(imagenes);
-    } else {
-        $('#sec_images').html('');
+    if (!sugeridos || sugeridos.length === 0) {
+        $('.latest-products').hide();
+        return;
     }
-     
-    // Se agrega información detallada del producto
-    agregarInformacionItemPpal(data['0']);
 
-    // Se agrega la informacion de los items por grupo
-    agregarItemsPorGrupo(grupo);
+    sugeridos.forEach(s => {
+        const imgUrl = (s.imagenes && s.imagenes.length > 0) 
+            ? `${urlImg}${s.imagenes[0].url}` 
+            : urlImg + "no-image-placeholder.jpg";
+            
+        const precioFmt = new Intl.NumberFormat('es-CO', { 
+            style: 'currency', 
+            currency: 'COP', 
+            minimumFractionDigits: 0 
+        }).format(s.precio_venta);
 
-    // // Se agrega la información de los items por linea
-    // agregarItemsPorLinea(data.data.linea);
+        var nombreProd = s.nombre;
+        var codProd = s.codigo;
+        var refProd = s.referencia;
+
+        // 2. Creamos el texto personalizado
+        var mensajeWsp = "¡Hola! Me interesa información sobre el producto: " + nombreProd + 
+                        " (Código: " + codProd + " | Ref: " + refProd + ")";
+
+        // 3. Lo codificamos para URL
+        var mensajeEncoded = encodeURIComponent(mensajeWsp);
+
+        // 4. Armamos el link final
+        var linkWsp = "https://api.whatsapp.com/send/?phone=573008225432&text=" + mensajeEncoded + "&type=phone_number&app_absent=0";
+
+        // Estructura idéntica a las cards del Index
+        const card = `
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="apple-card">
+                    <div class="apple-card-image-wrapper" onclick="window.location.href='product-details.php?id=${s.id}'" style="cursor:pointer;">
+                        <img src="${imgUrl}" alt="${nombreProd}">
+                    </div>
+                    <div class="apple-card-details">
+                        <div class="product-meta-subtle">Cod: ${codProd} | Ref: ${refProd}</div>
+                        <h4 class="apple-card-title">${nombreProd}</h4>
+                        <div class="apple-card-price">${precioFmt}</div>
+                        
+                        <div class="apple-card-actions">
+                            <button class="btn-icon-only btn-cart-icon" title="Añadir al carrito" onclick="cambiarCantidad(${s.id})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            </button>
+                            <a href="${linkWsp}" target="_blank" class="btn-icon-only btn-wsp-icon" onclick="event.stopPropagation();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.601 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        contenedor.append(card);
+    });
 }
 
 /**
  * Funcion para obtener un producto especifico, detalles y 
  * productos similares relacionados
+ * En uso
  */
-var obtenerInfoDetalladaProducto = function() {
-    var id = sessionStorage.getItem('idProd');
-
-    if( id == null) {
-        bootbox.alert('Debe seleccionar un producto');
-        window.location.href = urlEC + "index";
-    } else {
-        //se obtienen los productos
-        $.ajax({
-            method: "GET",
-            url: urlC + "item/obtener",
-            data: { idItem: id },
-            success: function(respuesta) {
-                if ( respuesta.estado ) {
-                    generarVistaDetalladaItem(respuesta.data, respuesta.grupo, respuesta.imagenes);
-                } else {
-                    bootbox.alert('no fue posible obtener el producto.')                
-                }                
-            },
-            error: function() {
-                bootbox.alert('Se presentó un error. Por favor, inténtelo nuevamente.');
-            }
-        });
-    }      
+var cargarInformacionProducto = function(idProd) {
+    //se obtienen los productos
+    $.ajax({
+        method: "GET",
+        url: urlC + "producto/obtenerdetalle",
+        data: { idProd: idProd },
+        success: function(respuesta) {
+            if ( respuesta.estado ) {
+                generarVistaDetalladaItem(respuesta);
+            } else {
+                notificarUsuario("No se pudo obtener información del producto", "info");               
+            }                
+        },
+        error: function() {
+            notificarUsuario("No se pudo obtener información del producto", "error");
+        }
+    }); 
 }
 
-var putLoaders = function( cant = 3, cantGrp = 8 ) {
+/**
+ * Función para obtener parámetros de la URL
+ * En uso
+ */
+const getQueryParam = (param) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+};
 
-    // Se crean los loaders para las imagenes secundarias
-    var detailHtml = "";
-    for( var i = 0; i < cant; i++ ){
-        
-        detailHtml += '<div>';
-        detailHtml += '<div class="cont_img_ppal2">';
-        detailHtml += '<img src="assets/images/empty.jpg" class="img-fluid" width="100" height="79">';
-        detailHtml += '<div class="centrado2"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></div>';
-        detailHtml += '</div>';
-        detailHtml += '<br>';
-        detailHtml += '</div>';
+/**
+ * Agrega la información del formulario al carrito de compras
+ * con la cantidad específica para el producto
+ */
+var salvarAlCarrito = function() {
+    var cantidad = $('#uniFactor').val();
+    const idProd = getQueryParam('id');
 
-    }
+    cambiarCantidad(idProd, cantidad);
 
-    $('#sec_images').html(detailHtml);    
-
-    // Se crea el loader para la imagen principal
-    var detailHtml = "";
-    detailHtml += '<div class="cont_img_ppal"><img src="assets/images/empty.jpg" class="img-fluid " width="450" height="355"/>';
-    detailHtml += '<div class="centrado"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div></div>'
-    $('#ppal_image').html(detailHtml);
-
-    // Se crea el loader para la seccion de productos de interes
-    var gruposHtml = "";    
-
-    for( var i = 0; i < cantGrp; i++) {       
-
-        gruposHtml += '<div class="col-md-3">';
-        gruposHtml += '<div class="product-item">';
-        gruposHtml += '<div style="position: relative">';
-        gruposHtml += '<a href="#"><img src="assets/images/empty.jpg" width="215" height="170"></a>';                
-        gruposHtml += '</div>';
-        gruposHtml += '<div class="down-content text-center">';
-        gruposHtml += '<i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>';
-        gruposHtml += '</div>';        
-        gruposHtml += '</div>';
-        gruposHtml += '</div>';    
-    }
-  
-    $('#imgGrupos').html(gruposHtml);
-
+    $('#uniFactor').val('1');
 }
 
 
 $( document ).ready(function() {
-    putLoaders(3, 8);
-    obtenerInfoDetalladaProducto();
+    const idProd = getQueryParam('id');
+    
+    if (idProd) {
+        cargarInformacionProducto(idProd);
+    } else {
+        // Si alguien entra a product-details.php sin ID, lo mandamos al inicio
+        window.location.href = "index.php";
+    }
 });

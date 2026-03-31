@@ -676,15 +676,6 @@ footer .inner-content p a {
 	transition: all .3s;
 }
 
-.products ul.pages li a:hover,
-.products ul.pages li.active a {
-	background-color: #f33f3f;
-	border-color: #f33f3f;
-	color: #fff;
-}
-
-
-
 /* Team Members */
 
 .team-members {
@@ -1105,4 +1096,13 @@ footer .inner-content p a {
 	.product-item .down-content h6 {
 		margin-bottom: 20px;
 	}
+}
+
+@keyframes bump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+.bump {
+    animation: bump 0.3s ease-out;
 }

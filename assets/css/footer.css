@@ -1,0 +1,37 @@
+.apple-footer {
+    /* Un gris muy suave (F5F5F7 es el estándar de Apple) para separar del blanco */
+    background-color: #f8f9fa !important; 
+    border-top: 1px solid #e1e1e3 !important; /* Línea de separación sutil */
+    padding-top: 60px !important;
+    padding-bottom: 20px !important;
+    margin-top: 80px !important; /* Espacio para que no choque con el paginador */
+    font-family: 'Inter', sans-serif;
+    color: #1d1d1f;
+}
+
+/* Mejorar la legibilidad de los títulos del footer */
+.footer-subtitle {
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #000000 !important;
+    margin-bottom: 20px;
+}
+
+/* Links más finos y elegantes */
+.footer-links a, .footer-links-contact li {
+    color: #424245 !important;
+    font-size: 0.85rem !important;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #0066cc !important;
+}
+
+/* La línea del copyright un poco más tenue */
+.footer-bottom {
+    border-top: 1px solid #d2d2d7 !important;
+    margin-top: 40px;
+    padding-top: 25px;
+}
