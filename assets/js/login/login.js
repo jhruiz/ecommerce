@@ -36,6 +36,9 @@ function loginUser() {
     if(validarLogin(user, password)) {
         $.ajax({
             method: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
             url: urlC + "cliente/login",
             data: { user: user, password: password },
             success: function(respuesta) {

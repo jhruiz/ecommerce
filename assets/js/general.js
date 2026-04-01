@@ -27,6 +27,9 @@ var obtenerItems = function() {
     if( userId != null ) {
         $.ajax({
             method: "GET",
+            xhrFields: {
+                withCredentials: true
+            },
             url: urlC + "pedido/cantidaditems",
             data: { userId : userId },
             success: function(respuesta) {
@@ -64,6 +67,9 @@ var obtenerItems = function() {
 var cargarValEnv = function(){
     $.ajax({
         method: "GET",
+        xhrFields: {
+            withCredentials: true
+        },
         url: "env.json",
         async: false,
         success: function(respuesta) {
@@ -130,48 +136,58 @@ function closeCart() {
 
 // Consultar al Back la prefactura activa
 function actualizarContenidoCarrito() {
-    $.get(urlC + 'pedido/obtenercarritoactivo', function(res) {
-        if (res.estado) {
-            let html = '';
-            
-            if (res.items.length === 0) {
-                html = '<div class="empty-cart-msg text-center py-5"><p class="text-muted">Tu carrito está vacío</p></div>';
-            } else {
-                res.items.forEach(item => {
-                    html += `
-                        <div class="cart-item">
-                            <div class="cart-item-media">
-                                <img src="${urlImg}${item.imagen}" alt="${item.nombre}">
-                            </div>
-                            
-                            <div class="cart-item-details">
-                                <h4 class="cart-item-name">${item.nombre}</h4>
-                                <p class="cart-item-unit-price" style="font-size: 12px; color: #86868b;">${item.precio_fmt}</p>
+    $.ajax({
+        url: urlC + 'pedido/obtenercarritoactivo',
+        type: 'GET',
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function(res) {
+            if (res.estado) {
+                let html = '';
+                
+                if (res.items.length === 0) {
+                    html = '<div class="empty-cart-msg text-center py-5"><p class="text-muted">Tu carrito está vacío</p></div>';
+                } else {
+                    res.items.forEach(item => {
+                        html += `
+                            <div class="cart-item">
+                                <div class="cart-item-media">
+                                    <img src="${urlImg}${item.imagen}" alt="${item.nombre}">
+                                </div>
                                 
-                                <div class="amazon-stepper">
-                                    <button onclick="cambiarCantidad(${item.producto_id}, -1)" class="stepper-btn">
-                                        ${item.cantidad > 1 ? '<i class="fa fa-minus"></i>' : '<i class="fa fa-trash-o" style="color:#ff3b30"></i>'}
-                                    </button>
-                                    <span class="stepper-value">${item.cantidad}</span>
-                                    <button onclick="cambiarCantidad(${item.producto_id}, 1)" class="stepper-btn">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                                <div class="cart-item-details">
+                                    <h4 class="cart-item-name">${item.nombre}</h4>
+                                    <p class="cart-item-unit-price" style="font-size: 12px; color: #86868b;">${item.precio_fmt}</p>
+                                    
+                                    <div class="amazon-stepper">
+                                        <button onclick="cambiarCantidad(${item.producto_id}, -1)" class="stepper-btn">
+                                            ${item.cantidad > 1 ? '<i class="fa fa-minus"></i>' : '<i class="fa fa-trash-o" style="color:#ff3b30"></i>'}
+                                        </button>
+                                        <span class="stepper-value">${item.cantidad}</span>
+                                        <button onclick="cambiarCantidad(${item.producto_id}, 1)" class="stepper-btn">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+    
+                                <div class="cart-item-total-price">
+                                    ${item.total_fila_fmt}
                                 </div>
                             </div>
-
-                            <div class="cart-item-total-price">
-                                ${item.total_fila_fmt}
-                            </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
+    
+                $('#cart-items-container').html(html);
+                $('#cart-subtotal').text(res.subtotal);
+                $('#cart-iva').text(res.iva);
+                $('#cart-total').text(res.total);
+                $('#cntItems').text(res.totalLineas);
             }
-
-            $('#cart-items-container').html(html);
-            $('#cart-subtotal').text(res.subtotal);
-            $('#cart-iva').text(res.iva);
-            $('#cart-total').text(res.total);
-            $('#cntItems').text(res.totalLineas);
+        },
+        error: function(xhr) {
+            console.error("Error al obtener el carrito:", xhr);
         }
     });
 }
@@ -184,6 +200,9 @@ function cambiarCantidad(productoId, cantidad = 1) {
     
     $.ajax({
         method: "POST",
+        xhrFields: {
+            withCredentials: true
+        },
         url: urlC + "pedidos/guardar",
         data: { item_id: productoId, cantidad: cantidad },
         async: false,
