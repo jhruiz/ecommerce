@@ -68,6 +68,18 @@
                     </div>
                 </div>
 
+                <div class="form-section">
+                    <h3 class="section-subtitle">Seguridad</h3>
+                    <div class="apple-row">
+                        <div class="apple-group">
+                            <input name="password" type="password" id="password" placeholder="Contraseña">
+                        </div>
+                        <div class="apple-group">
+                            <input name="password_two" type="password" id="password_two" placeholder="Repetir contraseña">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-footer">
                     <p class="terms-text">Al suscribirte, aceptas nuestros <a href="#">Términos y Condiciones</a>.</p>
                     <button type="button" class="apple-btn-primary" id="subscribe" onclick="suscribirse()">
@@ -79,7 +91,9 @@
     </div>
 </div>
 
-<?php 
+<?php  
   include 'includes/layout/whatsapp.php'; 
   include 'includes/layout/footer.php'; 
 ?>
+
+<script src="assets/js/suscription/suscription.js"></script>

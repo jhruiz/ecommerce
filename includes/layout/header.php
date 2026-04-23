@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="assets/css/loginsus/login.css">
         <link rel="stylesheet" href="assets/css/loginsus/suscription.css">
         <link rel="stylesheet" href="assets/css/productdetails/product-details.css">
+        <link rel="stylesheet" href="assets/css/orders/my_orders.css">
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

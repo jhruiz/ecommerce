@@ -122,14 +122,24 @@ var obtenerPaises = function() {
 var validarCampos = function() {
     var mensaje = "";
 
-    mensaje += $('#name').val() == "" ? '- El campo nombres es obligatorio.<br>' : '';
-    mensaje += $('#lastnames').val() == "" ? '- El campo apellidos es obligatorio.<br>' : '';
-    mensaje += $('#identification').val() == "" ? '- El campo identificación es obligatorio.<br>' : '';
-    mensaje += $('#email').val() == "" ? '- El campo email es obligatorio.<br>' : '';
-    mensaje += $('#dptos').val() == "" ? '- El campo departamentos es obligatorio.<br>' : '';
-    mensaje += $('#cities').val() == "" ? '- El campo ciudades es obligatorio.<br>' : '';
-    mensaje += $('#direction').val() == "" ? '- El campo dirección es obligatorio.<br>' : '';
-    mensaje += $('#cellphone').val() == "" ? '- El campo celular es obligatorio.<br>' : '';
+    if ($('#name').val() == "") mensaje += 'Nombres obligatorios.<br>';
+    if ($('#lastnames').val() == "") mensaje += 'Apellidos obligatorios.<br>';
+    if ($('#identification').val() == "") mensaje += 'Identificación obligatoria.<br>';
+    if ($('#email').val() == "") mensaje += 'Email obligatorio.<br>';
+    if ($('#cities').val() == "") mensaje += 'Selecciona una ciudad.<br>';
+    if ($('#direction').val() == "") mensaje += 'Dirección obligatoria.<br>';
+    if ($('#cellphone').val() == "") mensaje += 'Celular obligatorio.<br>';
+
+    var pass1 = $('#password').val();
+    var pass2 = $('#password_two').val();
+
+    if (pass1 === "" || pass2 === "") {
+        mensaje += 'Ingresa y confirma tu contraseña.<br>';
+    } else if (pass1.length < 6) {
+        mensaje += 'La contraseña es muy corta (min 6).<br>';
+    } else if (pass1 !== pass2) {
+        mensaje += 'Las contraseñas no coinciden.<br>';
+    }
 
     return mensaje;
 }
@@ -138,59 +148,61 @@ var validarCampos = function() {
  * Ejecuta el llamado ajax para almacenar cliente
  */
 var suscribirse = function() {
-    
-    //se valida que se hayan ingresado todos los campos de manera correcta
-    var mensaje = validarCampos();
+    var mensajeError = validarCampos();
 
-    if(mensaje == "") {
+    if(mensajeError == "") {
         $('#subscribe').hide();
-        
-        showLoader();
+        // Asumo que tienes una función showLoader() o similar
+        if (typeof showLoader === "function") showLoader();
 
-        var identificacion = $('#identification').val();
-        var email = $('#email').val();
-        var ciudad = $('#cities').val();
-        var direccion = $('#direction').val();
-        var celular = $('#cellphone').val();
-        var telefono = $('#telephone').val();
-        var nombres = $('#name').val();
-        var apellidos = $('#lastnames').val();
+        var datos = {
+            identificacion: $('#identification').val(),
+            email: $('#email').val(),
+            ciudad: $('#cities').val(),
+            direccion: $('#direction').val(),
+            celular: $('#cellphone').val(),
+            telefono: $('#telephone').val(),
+            nombres: $('#name').val(),
+            apellidos: $('#lastnames').val(),
+            password: $('#password').val(),
+            tipoPersona: '1',
+            perfiles: '2'
+        };
 
         $.ajax({
-            method: "GET",
-            url: urlC + "usuarios/crear",
-            data: {
-                identificacion: identificacion,
-                email: email,
-                ciudad: ciudad,
-                direccion: direccion,
-                celular: celular,
-                telefono: telefono,
-                tipoPersona: '1',
-                perfiles: '2',
-                nombres: nombres,
-                apellidos: apellidos
-            },
+            method: "POST",
+            url: urlC + "cliente/crearactualizar",
+            xhrFields: { withCredentials: true },
+            data: datos,
             success: function(respuesta) {
+                if (typeof hideLoader === "function") hideLoader();
+
                 if(!respuesta.estado){
-                    bootbox.alert(respuesta.mensaje, function(){
-                        $('#subscribe').show();
-                        hideLoader();
-                    });
-                } else if (respuesta.estado) {
-                    hideLoader();
-                    bootbox.alert('El usuario ha sido creado de forma correcta.', function(){
+                    // Notificación de error
+                    notificarUsuario(respuesta.mensaje, 'error');
+                    $('#subscribe').show();
+                } else {
+                    // Notificación de éxito
+                    notificarUsuario(respuesta.mensaje || '¡Bienvenido! Registro completado.', 'success');
+                    
+                    // Redirigir después de que el usuario vea el brindis (toast)
+                    setTimeout(function() {
                         window.location.href = urlEC + "login.php";
-                    });
+                    }, 2200); 
                 }                
             },
             error: function() {
-                console.log('Error crear el usuario.');
+                if (typeof hideLoader === "function") hideLoader();
+                $('#subscribe').show();
+                notificarUsuario('Error de conexión con el servidor', 'error');
             }
         });
      
     } else {
-        bootbox.alert(mensaje);  
+        // En lugar de bootbox, usamos tu notificarUsuario
+        // Nota: Como es un toast, si el mensaje es muy largo, podrías considerar 
+        // usar un Swal.fire normal o limpiar los saltos <br>
+        notificarUsuario(mensajeError, 'warning');
     }
 }
 

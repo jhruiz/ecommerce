@@ -1,167 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php 
+  $pagina_actual = 'inicio'; 
+  include 'includes/layout/header.php'; 
+?>
 
-  <head>
+<style>
+/* CSS CRÍTICO PARA EL DISEÑO */
+.apple-card { background: #fff; border-radius: 16px; border: 1px solid #eee; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden; }
+.trpedido { cursor: pointer; transition: 0.2s; }
+.trpedido:hover { background: #f9f9f9; }
+.table-active-torque { background-color: #e8f2ff !important; border-left: 4px solid #007aff; }
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="assets/images/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+/* Timeline Horizontal */
+.timeline-apple { display: flex !important; justify-content: space-between; list-style: none; padding: 0; margin: 40px 0; position: relative; width: 100%; }
+.timeline-apple::before { content: ''; position: absolute; top: 20px; left: 10%; right: 10%; height: 2px; background: #eee; z-index: 1; }
+.timeline-apple li { flex: 1; text-align: center; position: relative; z-index: 2; }
+.timeline-apple li .icon { width: 40px; height: 40px; background: #fff; border: 2px solid #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: #ccc; }
+.timeline-apple li.active .icon { background: #007aff; border-color: #007aff; color: #fff; }
+.timeline-apple li .text { font-size: 12px; color: #999; display: block; }
+.timeline-apple li.active .text { color: #333; font-weight: bold; }
+</style>
 
-    <title>TORQUE RACING S.A.S</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="assets/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/css/my-orders/my-orders.css">
-    <link rel="stylesheet" href="assets/css/whatsapp/whatsapp.css">
-
-  </head>
-
-  <body>
-
-    <!-- ***** Preloader Start ***** -->
-    <div id="preloader">
-        <div class="jumper">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>  
-    <!-- ***** Preloader End ***** -->
-
-    <!-- Header -->
-    <header class="">
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="index.php"><h2><em>Torque Racing</em></h2></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Inicio
-                      <span class="sr-only">(current)</span>
-                    </a>
-                </li> 
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categorías</a>
-                  <div class="dropdown-menu drp-menu-categorias"></div>
-                </li>                
-                <li class="nav-item"><a class="nav-link" href="about-us.php">Sobre Nosotros</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" onclick="goToShopping();">Carrito de compras(<span id="cntItems">0</span>)</a></li>
-                <li class="nav-item active pedidos"><a class="nav-link" href="my-orders.php">Mis pedidos</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.php">Ingresar</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <!-- Page Content -->
-    <div class="" style="">
-      <div class="container">
+<div class="products call-to-action" style="margin-top: 120px; min-height: 90vh; background-color: #fbfbfb;">
+    <div class="container-fluid" style="padding: 0 50px;">
         <div class="row">
-          <div class="col-md-12">
-            <div class="text-content">
-              <!-- <h4>Lorem ipsum dolor sit amet</h4>
-              <h2>Blog</h2> -->
+            
+            <div class="col-lg-4 col-md-5">
+                <div class="apple-card">
+                    <div class="p-3 border-bottom"><h5 class="mb-0 font-weight-bold">Mis Pedidos</h5></div>
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th># Pedido</th>
+                                    <th>Estado</th>
+                                    <th class="text-right">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="det_pedidos">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div id="wrapper-detalle" class="apple-card" style="min-height: 500px;">
+                    
+                    <div id="instruccion-seleccion" class="p-5 text-center" style="display: flex; flex-direction: column; justify-content: center; min-height: 500px;">
+                        <i class="fa fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                        <h5 class="text-muted">Selecciona un pedido para ver el detalle</h5>
+                    </div>
+
+                    <div id="info-pedido-dinamica" style="display: none;" class="p-5">
+                        <h4 class="font-weight-bold mb-4">Orden <span id="num_pedido" class="text-primary"></span></h4>
+                        
+                        <div class="time-line mb-5"></div> <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h6 class="font-weight-bold border-bottom pb-2">Resumen</h6>
+                                <table class="table table-sm table-borderless">
+                                    <tbody id="det-res-pedido"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <h6 class="font-weight-bold mb-3">Productos</h6>
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-right">Unitario</th>
+                                    <th class="text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="det_pedido"></tbody>
+                            <tfoot id="det_pago"></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="products call-to-action" style="margin-top: 100px;">
-      <div class="container-fluid">
-
-        <div class="row">
-          <div class="col-md-5">
-            <div class="container-fluid">
-              <table class="table tblData">
-                <thead id="headtable">
-                  <tr>              
-                    <th scope="col"># Pedido</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">&nbsp;</th>
-                  </tr>
-                </thead>
-                <tbody id="det_pedidos"></tbody>
-              </table>
-            </div>
-          </div>
-          <!-- <div class="col-md-7 container-fluid" style="background-color: rgb(247, 243, 243); -webkit-border-radius: 7px"> -->
-          <div class="col-md-7">
-            <div class="container-fluid">
-
-              <div style="margin-bottom: 30px;">
-                <h4>Detalles del pedido <span id="num_pedido"></span></h4>
-              </div>
-
-              <div class="badge-light time-line" style="border-radius: 3px;">
-                <!-- linea de tiempo -->              
-              </div>           
-
-              <div class="badge-light" style="border-radius: 3px; margin-bottom: 10px;">
-                <!-- Seccion para el resumen del pedido -->
-                <div class="col-md-12 text-center" id="subtittle-pedido-ok"></div>
-                <table class="table" id="tbl-resumen-pedido" style="margin: 0 auto;">
-                  <tbody id="det-res-pedido"></tbody>
-                </table>
-                <!-- Fin sección para el resumen del pedido -->                
-              </div>
-
-              <div class="badge-light" style="border-radius: 3px;">
-                <!-- Seccion para el detalle del pedido -->
-                <table class="table" style="margin: 0 auto;">
-                  <thead id="detHeadtable"></thead>
-                  <tbody id="det_pedido"></tbody>
-                  <tbody id="det_pago"></tbody>
-                </table>                
-                <!-- fin seccion para el detalle del pedido -->
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="inner-content">
-               <p>Copyright © <?php echo date('Y')?> Miggo Solutions S.A</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <div class="whatsapp-button">
-        <a  href="https://wa.me/573008225432?text=¡Hola!%20Me%20interesa%20conocer%20más%20sobre%20sus%20productos." target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
-        </a>
-    </div>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
-
-
-    <!-- Additional Scripts -->
-    <script src="assets/js/general.js"></script>
-    <script src="assets/js/generalcategorias.js"></script>
-    <script src="assets/js/orders/my_orders.js"></script>
-  </body>
-
-</html>
+<?php  
+  include 'includes/layout/whatsapp.php'; 
+  include 'includes/layout/footer.php'; 
+?>
+<script src="assets/js/orders/my_orders.js"></script>

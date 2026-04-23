@@ -1,261 +1,103 @@
-estadosPedido = {};
+var estadosPedido = [];
 
-// Constante para formatear numeros
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  });
+const formatearNumero = (n) => {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(n);
+};
 
-/**
- * Formatea los valores de precio
- * @param {*} numero 
- * @returns 
- */
-var formatearNumero = function(numero) {
-    return formatter.format(numero).toString();    
-}
-
-var generarTimeLine = function( estadoActual, mostrar ) {
-
-    var htmlTimeLine = "";
-
-    htmlTimeLine += '<ul class="timeline" id="timeline">';
-
-    /** Si se debe mostrar el time line, se recorre y se crea, de lo contrario, se muestra el pago rechazado */
-    if( mostrar ) {
-        estadosPedido.forEach( element => {
-            
-            var complete = element.orden <= estadoActual ? 'complete' : '';
-            var txtSuc = element.orden <= estadoActual ? 'text-success' : '';
-
-            htmlTimeLine += '<li class="li ' + complete + '">';
-            htmlTimeLine += '<div class="status">';
-            htmlTimeLine += '<div class="ped-icon"><i class="' + element.fontawesome + ' ' + txtSuc + '"></i></div>';
-            htmlTimeLine += '<span class="txt-tml"> ' + element.descripcion + ' </span>';
-            htmlTimeLine += '</div>';
-            htmlTimeLine += '</li>';
-        });
-    } else {
-        htmlTimeLine += '<li class="li complete">';
-        htmlTimeLine += '<div class="status">';
-        htmlTimeLine += '<div class="ped-icon"><i class="fa fa-ban text-success"></i></div>';
-        htmlTimeLine += '<span class="txt-tml"> PAGO RECHAZADO </span>';
-        htmlTimeLine += '</div>';
-        htmlTimeLine += '</li>';
-    }
-
-    htmlTimeLine += '</ul>'; 
-
-    $('.time-line').html(htmlTimeLine);
-
-}
-
-/**
- * Genera la información del resumen del pedido
- * @param {*} data 
- */
-var resumenPedido = function(respuesta) {
-
-    var numeroPedido = generarNumeroPedido( respuesta.data['0'] );
-    var htmlDetPed = "";
-    $('#subtittle-pedido-ok').html('<span>Resumen del pedido.</span>');
-
-    htmlDetPed += '<tr>';
-    htmlDetPed += '<th class="text-right">Número del pedido</th>';
-    htmlDetPed += '<td class="text-right">' + numeroPedido + '</td>';
-    htmlDetPed += '</tr>';
-
-    htmlDetPed += '<tr>';
-    htmlDetPed += '<th class="text-right">Fecha del pedido</th>';
-    htmlDetPed += '<td class="text-right">' + respuesta.data['0'].fechapedido + '</td>';
-    htmlDetPed += '</tr>';
-
-    htmlDetPed += '<tr>';
-    htmlDetPed += '<th class="text-right">Valor a cancelar</th>';
-    htmlDetPed += '<td class="text-right">' + formatearNumero(respuesta.ttles['4']) + '</td>';
-    htmlDetPed += '</tr>';
-
-    if( respuesta.data['0'].url_guia != null ) {
-        htmlDetPed += '<tr>';
-        htmlDetPed += '<th class="text-right">Guia transportadora</th>';
-        htmlDetPed += '<td class="text-right"><a target="_blank" href="' + urlGuide + respuesta.data['0'].url_guia + '" ><i class="fa fa-file-pdf-o fa-2x text-danger" aria-hidden="true"></i></a></td>';
-        htmlDetPed += '</tr>';
-    }
-
-    $('#det-res-pedido').html(htmlDetPed);
-    $('#tbl-resumen-pedido').css('width', '80%');    
-}
-
-/**
- * Crea la tabla con el detalle del pedido
- */
-var detallePedido = function(data) {
-    // cabecera del detalle del pedido
-    var htmlHead = "";
-    htmlHead += '<br>';
-    htmlHead += '<tr>';
-    htmlHead += '<th scope="col">Item</th>';
-    htmlHead += '<th scope="col">Cantidad</th>';
-    htmlHead += '<th scope="col">Vlr. Unit.</th>';
-    htmlHead += '<th scope="col">Imp. %.</th>';
-    htmlHead += '<th scope="col">Subtotal</th>';
-    htmlHead += '</tr>';
-    $('#detHeadtable').html(htmlHead);
-
-    // detalle del pedido
-    var htmlDetPed = "";
-    data.forEach(element => {
-
-        htmlDetPed += '<tr>';
-        htmlDetPed += '<td scope="row">' + element.desc_item +'</td>';
-        htmlDetPed += '<td class="text-right">' + element.cantidad + '</input>';
-        htmlDetPed += '<td class="text-right">' + formatearNumero(element.vlr_item) + '</td>';
-        htmlDetPed += '<td class="text-center">' + element.vlr_impuesto + '% </td>';
-        htmlDetPed += '<td class="text-right">' + formatearNumero(element.baseTtal) + '</td>';
-        htmlDetPed += '</tr>';
-    });
-
-    $('#det_pedido').html(htmlDetPed);
-}
-
-/**
- * Crea el detalle del pago en la tabla del pedido
- * @param {*} data 
- */
-var detallePago = function(ttles) {
-    var htmlDetPag = "";
-
-    htmlDetPag += '<tr>';
-    htmlDetPag += '<th colspan="4" class="text-right">Subtotal neto</th>';
-    htmlDetPag += '<td class="text-right">' + formatearNumero(ttles['2']) + '</td>';
-    htmlDetPag += '</tr>';
-
-    htmlDetPag += '<tr>';
-    htmlDetPag += '<th colspan="4" class="text-right">IVA</th>';
-    htmlDetPag += '<td class="text-right">' + formatearNumero(ttles['3']) + '</td>';
-    htmlDetPag += '</tr>';
-
-    htmlDetPag += '<tr>';
-    htmlDetPag += '<th colspan="4" class="text-right">Total a pagar</th>';
-    htmlDetPag += '<td class="text-right">' + formatearNumero(ttles['4']) + '</td>';
-    htmlDetPag += '</tr>';
-    
-    $('#det_pago').html(htmlDetPag);
-}
-
-
-/**
- * Genera los detalles del pedido
- * @param {*} data 
- */
-var generarDetallePedido = function( data ) {
-    // genera el time line del pedido seleccionado
-    generarTimeLine(data.data['0'].ordenpedido, data.data['0'].mostrar);
-
-    // genera la información del resumen del pedido
-    resumenPedido(data);
-
-    // genera la información del detalle del pedido
-    detallePedido(data.data);
-
-    // genera la información cno el detalle del pago
-    detallePago(data.ttles);
-}
-
-/**
- * Obtiene el detalle de un pedido específico
- * @param {*} data 
- */
-function verDetallePedido(data) {
-
-    $('.trpedido').removeClass('trselected');
-    $('#tr_' + $('#' + data.id).data('numero')).addClass('trselected');
-    
-    $('#num_pedido').html('#' + $('#' + data.id).data('numero'));
-    var pedId = data.id.replace('ped_', '');
-    
-    //se obtiene el detalle de un pedido específico
-    $.ajax({
-        method: "GET",
-        url: urlC + "pedidodetalle/obtenerdetalle",
-        data: { pedidoId: pedId },
-        success: function(respuesta) {
-            if ( respuesta.estado ) {
-                generarDetallePedido(respuesta);
-            } else {
-                bootbox.alert('no fue posible obtener la información del pedido.')                
-            }                
-        },
-        error: function() {
-            bootbox.alert('Se presentó un error. Por favor, inténtelo nuevamente.');
-        }
-    });
-}
-
-/**
- * Genera la tabla con los datos del pedido
- * @param {*} data 
- */
-var generarVistaPedidosCliente = function( data ) {
-
-    var htmlDetPed = "";
-    data.forEach(element => {
-        var numeroPedido = generarNumeroPedido( element );
-
-        htmlDetPed += '<tr id="tr_' + numeroPedido + '" class="trpedido">';
-        htmlDetPed += '<td>' + numeroPedido + '</td>';
-        htmlDetPed += '<td>' + element.descripcion + '</td>';
-        htmlDetPed += '<td>' + element.updated_at.substring(0,10) + '</td>';
-        htmlDetPed += '<td><i class="fa fa-search" id="ped_' + element.id + '" data-numero="' + numeroPedido + '" style="cursor: pointer;" title="Ver detalle" onclick="verDetallePedido(this)"></i></td>';
-        htmlDetPed += '</tr>';        
-    });
-    
-    $('#det_pedidos').html(htmlDetPed)
-}
-
-/**
- * Obtiene la información de los pedidos del cliente
- */
-var obtenerPedidosCliente = function() {
-    var userId = localStorage.getItem('id');
-
-    //se obtienen los productos
-    $.ajax({
-        method: "GET",
-        url: urlC + "pedido/obtenerpedidocliente",
-        data: { userId: userId },
-        success: function(respuesta) {
-            if ( respuesta.estado ) {
-                generarVistaPedidosCliente(respuesta.data);
-            } else {
-                bootbox.alert('no fue posible obtener el producto.')                
-            }                
-        },
-        error: function() {
-            bootbox.alert('Se presentó un error. Por favor, inténtelo nuevamente.');
-        }
-    });
-}
-
-/**
- * Obtiene los estados del pedido configurados en cotools
- */
-var obtenerEstadosPedido = function() {
+const obtenerEstadosPedido = () => {
     $.ajax({
         method: "GET",
         url: urlC + "estadopedidos/obtener",
-        data: { userId: userId },
-        success: function(respuesta) {
-            estadosPedido = respuesta.data;              
-        },
-        error: function() {
-            bootbox.alert('Se presentó un error. Por favor, inténtelo nuevamente.');
-        }
-    });    
+        xhrFields: { withCredentials: true },
+        success: function(res) { if (res.estado) estadosPedido = res.data; }
+    });
 }
 
-$( document ).ready(function() {
-    obtenerPedidosCliente();
+const cargarPedidos = () => {
+    var userId = localStorage.getItem('id');
+    $.ajax({
+        url: urlC + "prefactura/obtenerpedidocliente",
+        type: "GET",
+        data: { userId: userId },
+        xhrFields: { withCredentials: true },
+        success: function(res) {
+            if (res.estado) {
+                let html = '';
+                res.data.forEach(ped => {
+                    var num = ped.numeropedido || ped.id;
+                    html += `
+                    <tr id="tr_${ped.id}" class="trpedido" onclick="verDetalle(${ped.id}, '${num}')">
+                        <td><b>#${num}</b></td>
+                        <td><span class="badge badge-light text-primary">${ped.estado_nombre}</span></td>
+                        <td class="text-right small">${ped.fecha ? ped.fecha.substring(0,10) : ''}</td>
+                    </tr>`;
+                });
+                $('#det_pedidos').html(html);
+            }
+        }
+    });
+};
+
+const verDetalle = (id, num) => {
+    // UI: Activar fila
+    $('.trpedido').removeClass('table-active-torque');
+    $(`#tr_${id}`).addClass('table-active-torque');
+
+    // Manejo de contenedores
+    $('#instruccion-seleccion').hide();
+    $('#info-pedido-dinamica').show();
+    $('#num_pedido').text('#' + num);
+
+    $.ajax({
+        url: urlC + "pedidodetalle/obtenerdetalle",
+        type: "GET",
+        data: { pedidoId: id },
+        xhrFields: { withCredentials: true },
+        success: function(res) {
+            if (res.estado) {
+                renderTimeline(res.cabecera.estadopedido_id);
+                renderResumen(res.cabecera, res.ttles);
+                renderItems(res.data);
+                renderTotales(res.ttles);
+            }
+        }
+    });
+};
+
+const renderTimeline = (actual) => {
+    let html = '<ul class="timeline-apple">';
+    estadosPedido.forEach(e => {
+        const activo = e.id <= actual ? 'active' : '';
+        html += `<li class="${activo}"><div class="icon"><i class="${e.fontawesome}"></i></div><span class="text">${e.descripcion}</span></li>`;
+    });
+    html += '</ul>';
+    $('.time-line').html(html);
+};
+
+const renderResumen = (c, t) => {
+    $('#det-res-pedido').html(`
+        <tr><td><b>Fecha:</b> ${c.fechaorden || c.created}</td></tr>
+        <tr><td><b>Total Pagado:</b> ${formatearNumero(t['4'])}</td></tr>
+    `);
+};
+
+const renderItems = (items) => {
+    let html = '';
+    items.forEach(i => {
+        html += `<tr><td>${i.desc_item}</td><td class="text-center">${i.cantidad}</td><td class="text-right">${formatearNumero(i.vlr_item)}</td><td class="text-right">${formatearNumero(i.cantidad * i.vlr_item)}</td></tr>`;
+    });
+    $('#det_pedido').html(html);
+};
+
+const renderTotales = (t) => {
+    $('#det_pago').html(`
+        <tr><td colspan="3" class="text-right">Subtotal:</td><td class="text-right">${formatearNumero(t['2'])}</td></tr>
+        <tr><td colspan="3" class="text-right">IVA:</td><td class="text-right">${formatearNumero(t['3'])}</td></tr>
+        <tr><td colspan="3" class="text-right"><b>Total:</b></td><td class="text-right"><b>${formatearNumero(t['4'])}</b></td></tr>
+    `);
+};
+
+$(document).ready(function() {
     obtenerEstadosPedido();
+    cargarPedidos();
 });

@@ -23,7 +23,7 @@ $('#input_search').on('keyup', function () {
 var obtenerItems = function() {
     // valida si existe un usuario logueado
     var userId = localStorage.getItem('id');
-    
+
     if( userId != null ) {
         $.ajax({
             method: "GET",
@@ -135,7 +135,7 @@ function closeCart() {
 }
 
 // Consultar al Back la prefactura activa
-function actualizarContenidoCarrito() {
+function      actualizarContenidoCarrito() {
     $.ajax({
         url: urlC + 'pedido/obtenercarritoactivo',
         type: 'GET',
@@ -262,8 +262,6 @@ function cambiarCantidad(productoId, cantidad = 1) {
       }); 
     
 }
-
-
 
 $( document ).ready(function() { 
 
