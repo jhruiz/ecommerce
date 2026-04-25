@@ -2,12 +2,12 @@
     <div class="container">
         <div class="row pt-5 pb-4">
             <div class="col-md-4 mb-4">
-                <h5 class="footer-title">Miggo Marketplace</h5>
+                <h5 class="footer-title">Miggo Shop</h5>
                 <p class="footer-text">Herramientas de nivel superior para profesionales exigentes. Calidad garantizada en cada detalle.</p>
                 <div class="footer-socials">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/miggosolutions" target="_blank"><i class="fa fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/miggosolutionsco/" target="_blank"><i class="fa fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/miggo-solutions-colombia-734602238/" target="_blank"><i class="fa fa-linkedin"></i></a>
                 </div>
             </div>
 
@@ -23,8 +23,8 @@
             <div class="col-md-4 mb-4">
                 <h6 class="footer-subtitle">Contacto</h6>
                 <ul class="footer-links-contact">
-                    <li><i class="fa fa-envelope-o"></i> soporte@miggo.com</li>
-                    <li><i class="fa fa-phone"></i> +57 300 822 5432</li>
+                    <li><i class="fa fa-envelope-o"></i> soporte@miggo.com.co</li>
+                    <li><i class="fa fa-phone"></i> +57 322 658 0932</li>
                     <li><i class="fa fa-map-marker"></i> Cali, Colombia</li>
                 </ul>
             </div>

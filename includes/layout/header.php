@@ -10,7 +10,7 @@
         <link rel="icon" href="assets/images/favicon.ico">
         <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
 
-        <title>Torque Racing S.A.S</title>
+        <title id="nombreEmpresa"></title>
 
         <!-- Bootstrap core CSS -->
         <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -43,11 +43,10 @@
                 </div>
 
                 <div class="col-auto d-none d-xl-block">
-                    <nav class="nav-links-wrapper">
+                    <nav class="nav-links-wrapper" id="menu-principal-torque">
                         <a href="index.php" class="nav-item-apple">Inicio</a>
                         <a href="about-us.php" class="nav-item-apple">Sobre nosotros</a>
-                        <a href="my-orders.php" class="nav-item-apple">Mis Pedidos</a>
-                        <a href="login.php" class="nav-item-apple">Ingresar</a>
+                        <a href="login.php" class="nav-item-apple" id="link-acceso">Ingresar</a>
                     </nav>
                 </div>
 

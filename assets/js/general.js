@@ -7,6 +7,7 @@ var pagActual = '0';
 var cantItems = 0;
 var cantidadItems = 0;
 var empresa = 0;
+var nombreEmpresa = "";
 
 var typingTimer;                
 var doneTypingInterval = 350; // Tiempo de espera en ms
@@ -80,6 +81,9 @@ var cargarValEnv = function(){
             pagActual = respuesta.pagActual;
             cantItems = respuesta.cantItems;
             cantidadItems = respuesta.cantidadItems;
+            nombreEmpresa = respuesta.nombreEmpresa;
+
+            $('#nombreEmpresa').text(nombreEmpresa);
         },
         error: function() {
             bootbox.alert('Se produjo un error. Por favor, inténtelo nuevamente.');
@@ -135,7 +139,7 @@ function closeCart() {
 }
 
 // Consultar al Back la prefactura activa
-function      actualizarContenidoCarrito() {
+function actualizarContenidoCarrito() {
     $.ajax({
         url: urlC + 'pedido/obtenercarritoactivo',
         type: 'GET',
@@ -263,9 +267,72 @@ function cambiarCantidad(productoId, cantidad = 1) {
     
 }
 
+
+/**
+ * Cierra la sesión en Back y Front
+ */
+function ejecutarLogout() {
+    $.ajax({
+        method: "POST",
+        url: urlC + "cliente/logout", // Ruta que crearemos en Laravel
+        xhrFields: { withCredentials: true },
+        success: function(res) {
+            // Limpiamos los datos que guardó tu loginUser
+            localStorage.clear();
+            
+            // Usamos tu función de notificaciones
+            if (typeof notificarUsuario === 'function') {
+                notificarUsuario("Sesión cerrada correctamente", "success");
+            }
+
+            setTimeout(function() {
+                window.location.href = 'index.php';
+            }, 1500);
+        },
+        error: function() {
+            // Si falla la red, igual limpiamos local por seguridad
+            localStorage.clear();
+            window.location.href = 'login.php';
+        }
+    });
+}
+
+/**
+ * Revisa el localStorage y ajusta el menú
+ */
+function gestionarHeaderDinamico() {
+    const nombre = localStorage.getItem('nombre');
+    const menu = $('#menu-principal-torque');
+
+    if (nombre) {
+        const primerNombre = nombre.split(' ')[0];
+        
+        // Creamos la estructura con el nombre y la opción de salir
+        // Mantenemos tus clases 'nav-item-apple' para no dañar el diseño
+        const htmlLogueado = `
+            <a href="index.php" class="nav-item-apple">Inicio</a>
+            <a href="about-us.php" class="nav-item-apple">Sobre nosotros</a>
+            <div class="dropdown d-inline">
+                <a href="#" class="nav-item-apple dropdown-toggle" id="userMenu" data-toggle="dropdown">
+                    <i class="fa fa-user-circle"></i> ${primerNombre}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right apple-dropdown-shadow" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <a class="dropdown-item py-2" href="my-orders.php"><i class="fa fa-list-alt mr-2"></i> Mis Pedidos</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item py-2 text-danger" href="javascript:void(0)" onclick="ejecutarLogout()">
+                        <i class="fa fa-sign-out mr-2"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        `;
+        menu.html(htmlLogueado);
+    }
+}
+
 $( document ).ready(function() { 
 
     cargarValEnv();
     obtenerItems();
+    gestionarHeaderDinamico();
     
 });

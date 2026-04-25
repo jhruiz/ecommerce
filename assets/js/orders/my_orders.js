@@ -66,9 +66,13 @@ const verDetalle = (id, num) => {
 
 const renderTimeline = (actual) => {
     let html = '<ul class="timeline-apple">';
+    let activo = 'active';
     estadosPedido.forEach(e => {
-        const activo = e.id <= actual ? 'active' : '';
+        // const activo = e.id == actual ? 'active-' : '';
         html += `<li class="${activo}"><div class="icon"><i class="${e.fontawesome}"></i></div><span class="text">${e.descripcion}</span></li>`;
+        if(e.id == actual) {
+            activo = ''
+        }
     });
     html += '</ul>';
     $('.time-line').html(html);
