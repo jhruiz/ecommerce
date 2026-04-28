@@ -121,9 +121,14 @@ function procesarPedido() {
                     // Si es Contraentrega
                     window.location.href = 'gracias.php?order=' + res.order_id;
                 }
-            } else {
-                alert(res.mensaje);
-                btn.prop('disabled', false).text('Finalizar Pedido');
+            }    
+            if(metodo === 'contraentrega') {
+                // 1. Limpiamos el carrito localmente si usas localStorage para el conteo
+                localStorage.removeItem('cart_items'); // Ajusta según el nombre de tu variable
+                $('#cntItems').text('0'); // Ponemos el badge del header en cero
+                
+                // 2. Redirigimos
+                window.location.href = 'gracias.php?order=' + res.order_id;
             }
         },
         error: function(xhr) {
@@ -135,6 +140,103 @@ function procesarPedido() {
     });
 }
 
+// Variable global para guardar el ID del cliente
+let clienteActualId = null;
+
+function abrirModalDireccion() {
+    // Cargamos los países al abrir el modal (reutilizando tu lógica de registro)
+    obtenerPaises(); 
+    $('#modalDireccion').modal('show');
+}
+
+/**
+ * Función para guardar la nueva dirección en la base de datos
+ */
+function guardarNuevaDireccion() {
+    const datos = {
+        userId: localStorage.getItem('id'),
+        pais: $('#countries').val(),
+        dpto: $('#dptos').val(),
+        ciudad: $('#cities').val(), // ID de la ciudad
+        direccion: $('#new-direction').val(),
+        celular: $('#new-cellphone').val()
+    };
+
+    if (datos.ciudad === "" || datos.direccion === "" || datos.celular === "") {
+        alert("Por favor completa todos los campos obligatorios.");
+        return;
+    }
+
+    $.ajax({
+        url: urlC + 'cliente/actualizar-datos-envio', // Debes crear esta ruta en el controlador
+        type: 'POST',
+        xhrFields: { withCredentials: true },
+        data: datos,
+        success: function(res) {
+            if (res.estado) {
+                // Actualizar la vista del checkout sin recargar
+                $('#check-direccion-cliente').text(datos.direccion);
+                // El nombre de la ciudad lo sacamos del texto del select seleccionado
+                const ciudadNombre = $("#cities option:selected").text();
+                $('#check-ciudad-telefono').text(ciudadNombre + ' - ' + datos.celular);
+                
+                // Actualizar localStorage para futuras visitas
+                localStorage.setItem('direccion', datos.direccion);
+                localStorage.setItem('celular', datos.celular);
+                localStorage.setItem('ciudad', ciudadNombre);
+
+                $('#modalDireccion').modal('hide');
+                notificarUsuario("Datos de envío actualizados", "success");
+            } else {
+                alert("No se pudieron actualizar los datos: " + res.mensaje);
+            }
+        }
+    });
+}
+
+// --- LÓGICA DE SELECTS ANIDADOS (Reutilizada del registro) ---
+
+var obtenerPaises = function() {
+    $.ajax({
+        method: "GET",
+        url: urlC + "paises/obtener",
+        success: function(res) {
+            let html = '<option value="">PAISES*</option>';
+            res.data.forEach(e => html += `<option value="${e.id}">${e.descripcion}</option>`);
+            $('#countries').html(html);
+            $('#countries').off('change').on('change', obtenerDepartamentos);
+        }
+    });
+}
+
+var obtenerDepartamentos = function() {
+    const paisId = $('#countries').val();
+    $.ajax({
+        method: "GET",
+        url: urlC + "departamentos/obtener",
+        data: { paisId: paisId },
+        success: function(res) {
+            let html = '<option value="">DEPARTAMENTOS*</option>';
+            res.data.forEach(e => html += `<option value="${e.id}">${e.descripcion}</option>`);
+            $('#dptos').html(html);
+            $('#dptos').off('change').on('change', obtenerCiudades);
+        }
+    });
+}
+
+var obtenerCiudades = function() {
+    const dptoId = $('#dptos').val();
+    $.ajax({
+        method: "GET",
+        url: urlC + "ciudades/obtener",
+        data: { dptoId: dptoId },
+        success: function(res) {
+            let html = '<option value="">CIUDADES*</option>';
+            res.data.forEach(e => html += `<option value="${e.id}">${e.descripcion}</option>`);
+            $('#cities').html(html);
+        }
+    });
+}
 
 $(document).ready(function() {
     initCheckout();

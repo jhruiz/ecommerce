@@ -28,7 +28,7 @@
                     <h5 id="check-nombre-cliente" class="font-weight-bold mb-1">Cargando...</h5>
                     <p id="check-direccion-cliente" class="mb-0 text-muted"></p>
                     <p id="check-ciudad-telefono" class="text-muted"></p>
-                    <button class="btn-apple-secondary">Cambiar dirección</button>
+                    <button class="btn-apple-secondary" onclick="abrirModalDireccion()">Cambiar mi información</button>
                 </div>
             </div>
 
@@ -77,9 +77,54 @@
     </div>
 </div>
 
-<script src="vendor/jquery/jquery.min.js"></script>
+<div class="modal fade" id="modalDireccion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content apple-card" style="border: none;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title font-weight-bold">Cambiar datos de envío</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cambio-direccion">
+                    <div class="form-group">
+                        <label class="small text-muted">País*</label>
+                        <select id="countries" class="form-control apple-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="small text-muted">Departamento*</label>
+                        <select id="dptos" class="form-control apple-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="small text-muted">Ciudad*</label>
+                        <select id="cities" class="form-control apple-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="small text-muted">Dirección exacta*</label>
+                        <input type="text" id="new-direction" class="form-control apple-input" placeholder="Ej: Calle 10 # 5-20">
+                    </div>
+                    <div class="form-group">
+                        <label class="small text-muted">Teléfono Celular*</label>
+                        <input type="text" id="new-cellphone" class="form-control apple-input" placeholder="Ej: 3001234567">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-dismiss="modal" style="border-radius: 10px;">Cancelar</button>
+                <button type="button" class="btn btn-dark" onclick="guardarNuevaDireccion()" style="border-radius: 10px; background: #000;">Actualizar y Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="assets/js/general.js"></script>
 <script src="assets/js/checkout/checkout.js"></script>
 <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+
 </body>
 </html>
