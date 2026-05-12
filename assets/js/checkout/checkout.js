@@ -1,3 +1,27 @@
+function validarMetodoActivo() {
+    // Variable lógica
+    var pagoWompiHabilitado = localStorage.getItem('paygate');
+    
+    // Obtenemos los elementos
+    var radioWompi = document.querySelector('input[name="metodo_pago"][value="wompi"]');
+    var radioContraentrega = document.querySelector('input[name="metodo_pago"][value="contraentrega"]');
+    
+    if (pagoWompiHabilitado == 'false') {
+        // Si está habilitado, activamos Wompi y lo seleccionamos
+        radioWompi.disabled = false;
+        radioWompi.checked = true;
+    } else {
+        // 1. Bloqueamos Wompi para que no se pueda seleccionar
+        radioWompi.disabled = true;
+        
+        // 2. Quitamos cualquier selección previa de Wompi (por seguridad)
+        radioWompi.checked = false;
+        
+        // 3. Seleccionamos Contraentrega por defecto
+        radioContraentrega.checked = true;
+    }
+}
+
 function initCheckout() {
     const userId = localStorage.getItem('id');
 
@@ -69,75 +93,94 @@ function cargarResumenCheckout() {
     });
 }
 
-
 function procesarPedido() {
     const metodo = $('input[name="metodo_pago"]:checked').val();
     const totalRaw = $('#check-total').text().replace(/[^0-9]/g, '');
     const btn = $('.btn-pay-now');
-
-    btn.prop('disabled', true).text('Procesando...');
-
-    // CAMBIAMOS $.post POR $.ajax PARA ENVIAR CREDENCIALES
-    $.ajax({
-        url: urlC + 'pedidos/finalizar-compra',
-        type: 'POST',
-        xhrFields: {
-            withCredentials: true // <--- Crucial para que el back recupere la sesión del usuario
-        },
-        data: {
-            metodo_pago: metodo,
-            total: totalRaw
-        },
-        success: function(res) {
-            if(res.estado) {
-                if(metodo === 'wompi') {
-                    // El backend ya nos envió la firma y la llave cargada desde el Tenant
-                    const checkout = new WidgetCheckout({
-                        currency: 'COP',
-                        amountInCents: res.data_pago.monto,
-                        reference: res.data_pago.referencia,
-                        publicKey: res.data_pago.public_key,
-                        signature: { integrity: res.data_pago.firma },
-                        redirectUrl: window.location.origin + '/success.php',
-                        customerData: {
-                            email: res.cliente.email.trim(),
-                            fullName: res.cliente.nombre.trim(),
-                            phoneNumber: String(res.cliente.celular).replace(/\s/g, ''),
-                            phoneNumberPrefix: '+57'
-                        }
-                    });
-
-                    checkout.open(function (result) {
-                        // El resultado del pago se gestiona aquí
-                        if (result.transaction.status === 'APPROVED') {
-                            window.location.href = "gracias.php?ref=" + result.transaction.id;
-                        } else {
-                            // Si el pago no fue aprobado (rechazado/cancelado), rehabilitamos el botón
-                            alert("El pago no pudo ser procesado (" + result.transaction.status + "). Intenta de nuevo.");
-                            btn.prop('disabled', false).text('Finalizar Pedido');
-                        }
-                    });
-                } else {
-                    // Si es Contraentrega
+    const minAmount = localStorage.getItem('minamount');
+    
+    if (metodo == 'wompi' && parseFloat(totalRaw) < parseFloat(minAmount)) {
+        
+        const formatoMoneda = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0
+        }).format(minAmount);
+        
+        const mensaje = "El monto del pedido no puede ser menor a " + formatoMoneda + ".";
+        notificarUsuario(mensaje, "info");
+        
+    } else {
+        
+        btn.prop('disabled', true).text('Procesando...');
+    
+        // CAMBIAMOS $.post POR $.ajax PARA ENVIAR CREDENCIALES
+        $.ajax({
+            url: urlC + 'pedidos/finalizar-compra',
+            type: 'POST',
+            xhrFields: {
+                withCredentials: true // <--- Crucial para que el back recupere la sesión del usuario
+            },
+            data: {
+                metodo_pago: metodo,
+                total: totalRaw
+            },
+            success: function(res) {
+                if(res.estado) {
+                    if(metodo === 'wompi') {
+                        // El backend ya nos envió la firma y la llave cargada desde el Tenant
+                        const checkout = new WidgetCheckout({
+                            currency: 'COP',
+                            amountInCents: res.data_pago.monto,
+                            reference: res.data_pago.referencia,
+                            publicKey: res.data_pago.public_key,
+                            signature: { integrity: res.data_pago.firma },
+                            redirectUrl: window.location.origin + '/success.php',
+                            customerData: {
+                                email: res.cliente.email.trim(),
+                                fullName: res.cliente.nombre.trim(),
+                                phoneNumber: String(res.cliente.celular).replace(/\s/g, ''),
+                                phoneNumberPrefix: '+57'
+                            }
+                        });
+    
+                        checkout.open(function (result) {
+                            // El resultado del pago se gestiona aquí
+                            if (result.transaction.status === 'APPROVED') {
+                                window.location.href = "gracias.php?ref=" + result.transaction.id;
+                            } else {
+                                // Si el pago no fue aprobado (rechazado/cancelado), rehabilitamos el botón
+                                alert("El pago no pudo ser procesado (" + result.transaction.status + "). Intenta de nuevo.");
+                                btn.prop('disabled', false).text('Finalizar Pedido');
+                            }
+                        });
+                    } else {
+                        // Si es Contraentrega
+                        window.location.href = 'gracias.php?order=' + res.order_id;
+                    }
+                }    
+                if(metodo === 'contraentrega') {
+                    // 1. Limpiamos el carrito localmente si usas localStorage para el conteo
+                    localStorage.removeItem('cart_items'); // Ajusta según el nombre de tu variable
+                    $('#cntItems').text('0'); // Ponemos el badge del header en cero
+                    
+                    // 2. Redirigimos
                     window.location.href = 'gracias.php?order=' + res.order_id;
                 }
-            }    
-            if(metodo === 'contraentrega') {
-                // 1. Limpiamos el carrito localmente si usas localStorage para el conteo
-                localStorage.removeItem('cart_items'); // Ajusta según el nombre de tu variable
-                $('#cntItems').text('0'); // Ponemos el badge del header en cero
-                
-                // 2. Redirigimos
-                window.location.href = 'gracias.php?order=' + res.order_id;
+            },
+            error: function(xhr) {
+                // Manejo de errores de servidor (500, 404, etc)
+                console.error(xhr);
+                alert("Hubo un error de conexión con el servidor. Por favor intenta de nuevo.");
+                btn.prop('disabled', false).text('Finalizar Pedido');
             }
-        },
-        error: function(xhr) {
-            // Manejo de errores de servidor (500, 404, etc)
-            console.error(xhr);
-            alert("Hubo un error de conexión con el servidor. Por favor intenta de nuevo.");
-            btn.prop('disabled', false).text('Finalizar Pedido');
-        }
-    });
+        });
+        
+    }
+    
+    
+
+    
 }
 
 // Variable global para guardar el ID del cliente
@@ -239,5 +282,6 @@ var obtenerCiudades = function() {
 }
 
 $(document).ready(function() {
+    validarMetodoActivo();
     initCheckout();
 });

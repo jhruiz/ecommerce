@@ -125,6 +125,7 @@
 <script src="assets/js/general.js"></script>
 <script src="assets/js/checkout/checkout.js"></script>
 <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>
