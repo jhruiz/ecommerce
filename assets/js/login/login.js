@@ -58,6 +58,8 @@ function loginUser() {
                         localStorage.setItem('direccion', respuesta.data.direccion);
                         localStorage.setItem('ciudad', respuesta.data.ciudad);
                         localStorage.setItem('empresa', respuesta.data.empresa_id);
+                        localStorage.setItem('minamount', respuesta.minamount);
+                        localStorage.setItem('paygate', respuesta.paygate);
 
                         window.location.href = 'index.php';
                     }
