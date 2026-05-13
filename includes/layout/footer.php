@@ -5,16 +5,16 @@
                 <h5 class="footer-title">Miggo Shop</h5>
                 <p class="footer-text">Herramientas de nivel superior para profesionales exigentes. Calidad garantizada en cada detalle.</p>
                 <div class="footer-socials">
-                    <a href="https://www.facebook.com/miggosolutions" target="_blank"><i class="fa fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/miggosolutionsco/" target="_blank"><i class="fa fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/in/miggo-solutions-colombia-734602238/" target="_blank"><i class="fa fa-linkedin"></i></a>
+                    <a href="#" id="link-facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+                    <a href="#" id="link-instagram" target="_blank"><i class="fa fa-instagram"></i></a>
+                    <a href="#" id="link-linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
+                    <a href="#" id="link-youtube" target="_blank"><i class="fa fa-youtube"></i></a>
                 </div>
             </div>
 
             <div class="col-md-4 mb-4">
                 <h6 class="footer-subtitle">Soporte</h6>
                 <ul class="footer-links">
-                    <li><a href="#">Mis Pedidos</a></li>
                     <li><a href="#">Políticas de Envío</a></li>
                     <li><a href="#">Términos y Condiciones</a></li>
                 </ul>
@@ -23,9 +23,9 @@
             <div class="col-md-4 mb-4">
                 <h6 class="footer-subtitle">Contacto</h6>
                 <ul class="footer-links-contact">
-                    <li><i class="fa fa-envelope-o"></i> soporte@miggo.com.co</li>
-                    <li><i class="fa fa-phone"></i> +57 322 658 0932</li>
-                    <li><i class="fa fa-map-marker"></i> Cali, Colombia</li>
+                    <li id="li-email"><i class="fa fa-envelope-o"></i> <span></span></li>
+                    <li id="li-telefono"><i class="fa fa-phone"></i> <span></span></li>
+                    <li id="li-direccion"><i class="fa fa-map-marker"></i> <span></span></li>
                 </ul>
             </div>
         </div>
@@ -53,5 +53,6 @@
 <script src="assets/js/general.js"></script>
 <script src="assets/js/index/index.js"></script>
 <script src="assets/js/login/login.js"></script>
+<script src="assets/js/footer/footer.js"></script>
 </body>
 </html>

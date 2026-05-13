@@ -1,13 +1,21 @@
 var urlC = '';
 var urlEC = '';
 var urlImg = '';
-var urlGuide = '';
 var ivaIncDefecto = '';
 var pagActual = '0';
 var cantItems = 0;
 var cantidadItems = 0;
 var empresa = 0;
 var nombreEmpresa = "";
+var celular = "";
+var correo = "";
+var ubicacion = "";
+var googleubicacion = "";
+var facebook = "";
+var instagram = "";
+var linkedin = "";
+var youtube = "";
+var whatsappButton = "";
 
 var typingTimer;                
 var doneTypingInterval = 350; // Tiempo de espera en ms
@@ -66,6 +74,7 @@ var obtenerItems = function() {
  * Carga por ajax las variables de ambiente locales
  */
 var cargarValEnv = function(){
+
     $.ajax({
         method: "GET",
         xhrFields: {
@@ -74,16 +83,45 @@ var cargarValEnv = function(){
         url: "env.json",
         async: false,
         success: function(respuesta) {
-            urlC = respuesta.urlC;
-            urlEC = respuesta.urlEC;
-            urlImg = respuesta.urlImg;
-            urlGuide = respuesta.urlGuide;
-            pagActual = respuesta.pagActual;
-            cantItems = respuesta.cantItems;
-            cantidadItems = respuesta.cantidadItems;
-            nombreEmpresa = respuesta.nombreEmpresa;
+            urlC = respuesta.general.urlC;
+            urlEC = respuesta.general.urlEC;
+            urlImg = respuesta.general.urlImg;
+            pagActual = respuesta.general.pagActual;
+            cantItems = respuesta.general.cantItems;
+            cantidadItems = respuesta.general.cantidadItems;
+            nombreEmpresa = respuesta.general.nombreEmpresa;
+            
+            celular = respuesta.footer.celular;
+            correo = respuesta.footer.correo;
+            ubicacion = respuesta.footer.ubicacion;
+            facebook  = respuesta.footer.facebook;
+            instagram  = respuesta.footer.instagram;
+            linkedin  = respuesta.footer.linkedin;
+            youtube  = respuesta.footer.youtube;
+
+            about_us_titulo = respuesta.about_us.about_us_titulo;
+            about_us_descripcion = respuesta.about_us.about_us_descripcion;
+            donde_encontrarnos = respuesta.about_us.donde_encontrarnos;
+            googleubicacion = respuesta.about_us.googleubicacion;
+            about_us_facebook = respuesta.about_us.about_us_facebook;
+            about_us_instagram = respuesta.about_us.about_us_instagram;
+            about_us_linkedin = respuesta.about_us.about_us_linkedin;
+            about_us_youtube = respuesta.about_us.about_us_youtube;
+            direccion = respuesta.about_us.direccion;
+            horario = respuesta.about_us.horario;
+            correoventas = respuesta.about_us.correoventas;
+
+            whatsappButton = respuesta.whatsapp.whatsappButton;
 
             $('#nombreEmpresa').text(nombreEmpresa);
+
+            // 2. Construimos la URL de WhatsApp dinámicamente
+            // Usamos encodeURIComponent para que el mensaje no rompa la URL
+            var mensaje = "¡Hola! Me interesa conocer más sobre sus productos.";
+            var urlWhatsapp = "https://wa.me/+57" + celular + "?text=" + encodeURIComponent(mensaje);
+
+            // 3. Aplicamos la URL al botón
+            $('#btn-whatsapp-dinamico').attr('href', urlWhatsapp);
         },
         error: function() {
             bootbox.alert('Se produjo un error. Por favor, inténtelo nuevamente.');
