@@ -6,7 +6,7 @@ function validarMetodoActivo() {
     var radioWompi = document.querySelector('input[name="metodo_pago"][value="wompi"]');
     var radioContraentrega = document.querySelector('input[name="metodo_pago"][value="contraentrega"]');
     
-    if (pagoWompiHabilitado == 'false') {
+    if (pagoWompiHabilitado == 'true') {
         // Si está habilitado, activamos Wompi y lo seleccionamos
         radioWompi.disabled = false;
         radioWompi.checked = true;

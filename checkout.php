@@ -59,10 +59,6 @@
                         <span class="text-muted">Subtotal</span>
                         <span id="check-subtotal" class="font-weight-bold"></span> 
                     </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted">Envío</span>
-                        <span class="text-success font-weight-bold">Gratis</span>
-                    </div>
                     <div class="d-flex justify-content-between total-row pt-3">
                         <span>Total</span>
                         <span id="check-total">$ 0</span>
