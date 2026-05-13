@@ -77,7 +77,7 @@ var generarVistaImagenes = function(data) {
         var mensajeEncoded = encodeURIComponent(mensajeWsp);
 
         // 4. Armamos el link final
-        var linkWsp = "https://api.whatsapp.com/send/?phone=573008225432&text=" + mensajeEncoded + "&type=phone_number&app_absent=0";
+        var linkWsp = "https://api.whatsapp.com/send/?phone=57" + celular + "&text=" + mensajeEncoded + "&type=phone_number&app_absent=0";
 
         listPdrHtml += `
         <div class="col-xl-3 col-lg-4 col-sm-6 mb-4">
