@@ -9,7 +9,7 @@
       <div class="login-header">
         <img src="assets/images/logo.webp" alt="" class="login-logo">
         <h2>Iniciar sesión</h2>
-        <p>Usa tu cuenta de <p id="nombreEmpresa"></p> para comprar.</p>
+        <p>Usa tu cuenta de <span id="nombreEmpresaLogin"></span> para comprar.</p>
       </div>
 
       <div class="login-body">

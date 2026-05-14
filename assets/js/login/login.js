@@ -99,12 +99,12 @@ var validarEstadoLogin = function() {
         nlHtml += '<a href="#" class="btn btn-primary" onclick="logoutUser()">Salir</a>';
         nlHtml += '</fieldset>';
         nlHtml += '</div>';
-        $('#form-login').html(nlHtml);    
+        $('#form-login').html(nlHtml);  
     }
 
 }
 
-$( document ).ready(function() {   
-    $('#nombreEmpresa').text(nombreEmpresa);    
+$( document ).ready(function() { 
+    $('#nombreEmpresaLogin').text(nombreEmpresa); 
     validarEstadoLogin();
 });
