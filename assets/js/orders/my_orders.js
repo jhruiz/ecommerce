@@ -40,8 +40,8 @@ const cargarPedidos = () => {
 
 const verDetalle = (id, num) => {
     // UI: Activar fila
-    $('.trpedido').removeClass('table-active-torque');
-    $(`#tr_${id}`).addClass('table-active-torque');
+    $('.trpedido').removeClass('table-active-miggoshop');
+    $(`#tr_${id}`).addClass('table-active-miggoshop');
 
     // Manejo de contenedores
     $('#instruccion-seleccion').hide();

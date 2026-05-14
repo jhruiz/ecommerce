@@ -46,7 +46,7 @@
 
                   <div class="product-trust-badges">
                       <p><i class="fa fa-truck"></i> Envío rápido a todo el país</p>
-                      <p><i class="fa fa-shield"></i> Garantía oficial Torque Racing</p>
+                      <p><i class="fa fa-shield"></i> Garantía oficial <p id="nombreEmpresa"></p></p>
                   </div>
               </div>
             </div>

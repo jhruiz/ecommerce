@@ -11,7 +11,7 @@ include 'includes/layout/header.php';
                 <p class="about-text mt-4" id="about_us_descripcion"></p>
             </div>
             <div class="col-md-6 text-center">
-                <img src="assets/images/img_empresa.webp" class="img-fluid rounded-apple shadow-lg" alt="Oficina Torque Racing">
+                <img src="assets/images/img_empresa.webp" class="img-fluid rounded-apple shadow-lg" alt="">
             </div>
         </div>
 

@@ -144,7 +144,7 @@ const notificarUsuario = (mensaje, icono = 'success') => {
         showConfirmButton: false,
         timer: 2000, // Lo hacemos más rápido (2 seg) para que no estorbe
         timerProgressBar: true,
-        target: document.getElementById('notificaciones-torque'),
+        target: document.getElementById('notificaciones-miggoshop'),
         customClass: {
             popup: 'apple-toast-popup',
             title: 'apple-toast-title'
@@ -340,7 +340,7 @@ function ejecutarLogout() {
  */
 function gestionarHeaderDinamico() {
     const nombre = localStorage.getItem('nombre');
-    const menu = $('#menu-principal-torque');
+    const menu = $('#menu-principal-miggoshop');
 
     if (nombre) {
         const primerNombre = nombre.split(' ')[0];

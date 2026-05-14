@@ -8,7 +8,7 @@
 .apple-card { background: #fff; border-radius: 16px; border: 1px solid #eee; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden; }
 .trpedido { cursor: pointer; transition: 0.2s; }
 .trpedido:hover { background: #f9f9f9; }
-.table-active-torque { background-color: #e8f2ff !important; border-left: 4px solid #007aff; }
+.table-active-miggoshop { background-color: #e8f2ff !important; border-left: 4px solid #007aff; }
 
 /* Timeline Horizontal */
 .timeline-apple { display: flex !important; justify-content: space-between; list-style: none; padding: 0; margin: 40px 0; position: relative; width: 100%; }

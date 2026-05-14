@@ -38,12 +38,12 @@
                 
                 <div class="col-auto">
                     <a href="index.php" class="logo-container">
-                        <img src="assets/images/torque1.jpeg" alt="Torque Racing">
+                        <img src="assets/images/logo.webp" alt="">
                     </a>
                 </div>
 
                 <div class="col-auto d-none d-xl-block">
-                    <nav class="nav-links-wrapper" id="menu-principal-torque">
+                    <nav class="nav-links-wrapper" id="menu-principal-miggoshop">
                         <a href="index.php" class="nav-item-apple">Inicio</a>
                         <a href="about-us.php" class="nav-item-apple">Sobre nosotros</a>
                         <a href="login.php" class="nav-item-apple" id="link-acceso">Ingresar</a>
@@ -108,6 +108,6 @@
         </div>
     </div>
 
-    <div id="notificaciones-torque" style="position: fixed; top: 0; left: 0; width: 100vw; height: 0; z-index: 999999999 !important;"></div>
+    <div id="notificaciones-miggoshop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 0; z-index: 999999999 !important;"></div>
 
     

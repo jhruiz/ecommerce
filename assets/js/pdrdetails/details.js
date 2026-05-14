@@ -245,6 +245,7 @@ var salvarAlCarrito = function() {
 
 
 $( document ).ready(function() {
+    $('#nombreEmpresa').text(nombreEmpresa);
     const idProd = getQueryParam('id');
     
     if (idProd) {

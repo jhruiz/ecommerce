@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Torque Racing</title>
+    <title id="nombreEmpresa"></title>
     <link rel="icon" href="assets/images/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 
 <nav class="checkout-header mb-4">
     <div class="container d-flex justify-content-between align-items-center">
-        <img src="assets/images/torque_logo_dark.jpeg" height="35">
+        <img src="assets/images/logo.webp" height="35">
         <span class="secure-text"><i class="fa fa-lock"></i> Pago Seguro</span>
         <a href="index.php" class="back-link">Volver a la tienda</a>
     </div>

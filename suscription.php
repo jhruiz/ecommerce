@@ -8,7 +8,7 @@
         <div class="apple-form-card">
             <div class="form-header">
                 <h2>Crea tu cuenta</h2>
-                <p>Únete a la comunidad de Torque Racing y gestiona tus pedidos fácilmente.</p>
+                <p>Únete a la comunidad de <p id="nombreEmpresa"></p> y gestiona tus pedidos fácilmente.</p>
             </div>
 
             <form id="form-suscription" class="apple-form">

@@ -284,4 +284,6 @@ var obtenerCiudades = function() {
 $(document).ready(function() {
     validarMetodoActivo();
     initCheckout();
+
+    $('#nombreEmpresa').text(nombreEmpresa);
 });

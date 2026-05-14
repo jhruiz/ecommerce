@@ -104,6 +104,7 @@ var validarEstadoLogin = function() {
 
 }
 
-$( document ).ready(function() {       
+$( document ).ready(function() {   
+    $('#nombreEmpresa').text(nombreEmpresa);    
     validarEstadoLogin();
 });

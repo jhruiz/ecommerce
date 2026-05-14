@@ -207,6 +207,7 @@ var suscribirse = function() {
 }
 
 $( document ).ready(function() {
+    $('#nombreEmpresa').text(nombreEmpresa);
     obtenerPaises(); 
     
     // Se setean los select con datos genericos
