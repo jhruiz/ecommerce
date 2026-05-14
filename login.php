@@ -7,7 +7,7 @@
   <div class="container">
     <div class="apple-login-card">
       <div class="login-header">
-        <img src="assets/images/logo.webp" alt="" class="login-logo">
+        <img src="assets/images/logo.png" alt="" class="login-logo" style="max-width: 150px; height: auto; margin-bottom: 0px;">
         <h2>Iniciar sesión</h2>
         <p>Usa tu cuenta de <span id="nombreEmpresaLogin"></span> para comprar.</p>
       </div>

@@ -38,7 +38,7 @@
                 
                 <div class="col-auto">
                     <a href="index.php" class="logo-container">
-                        <img src="assets/images/logo.webp" alt="">
+                        <img src="assets/images/logo.png" alt="">
                     </a>
                 </div>
 

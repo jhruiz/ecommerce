@@ -13,7 +13,7 @@
 
 <nav class="checkout-header mb-4">
     <div class="container d-flex justify-content-between align-items-center">
-        <img src="assets/images/logo.webp" height="35">
+        <img src="assets/images/logo.png" height="35">
         <span class="secure-text"><i class="fa fa-lock"></i> Pago Seguro</span>
         <a href="index.php" class="back-link">Volver a la tienda</a>
     </div>
